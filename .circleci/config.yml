@@ -57,6 +57,9 @@ jobs:
       - checkout
       - attach_workspace:
           at: /tmp/workspace
+      - add_ssh_keys:
+          fingerprints:
+            - "e5:2a:e5:6b:0f:40:33:10:6d:3f:d7:23:c6:a5:85:01"
       - run:
           name: add dev remote
           command: git remote add dev dat18a-hop@116.203.52.174:/var/repos/dat18a-hop.git

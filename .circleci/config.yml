@@ -48,13 +48,17 @@ jobs:
             - version.txt
 
   deploy:
-    docker:
-      - image: circleci/openjdk:stretch
     steps:
       - attach_workspace:
           at: /tmp/workspace
 
-      - run: cd ~/repo && ls
+      - run:
+          name: add dev remote
+          command: git remote add dev rhoeberg@116.203.52.174:/var/repos/dat18a-hop.git
+      - run:
+          name: push to dev
+          command: git push dev main
+
 workflows:
   version: 2
   wf1:

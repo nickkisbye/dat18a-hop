@@ -60,6 +60,7 @@ jobs:
       - add_ssh_keys:
           fingerprints:
             - "fa:04:c7:ee:b3:82:19:0c:a0:18:98:97:1f:5f:8b:a2"
+
       - run:
           name: add dev remote
           command: git remote add dev dat18a-hop@116.203.52.174:/var/repos/dat18a-hop.git

@@ -1,11 +1,9 @@
 package com.example.FlowFireHub.Domains;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
+@Table(name = "users")
 public class User {
 
     @Id @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -15,7 +13,11 @@ public class User {
     private String username;
     private String email;
     private String password;
-    private int role;
+    private Long roleId;
+
+    @OneToOne()
+    @JoinColumn(name = "id")
+    private Roles roles;
 
     public User(String firstName, String lastName) {
         this.firstName = firstName;
@@ -73,11 +75,19 @@ public class User {
         this.password = password;
     }
 
-    public int getRole() {
-        return role;
+    public Long getRoleId() {
+        return roleId;
     }
 
-    public void setRole(int role) {
-        this.role = role;
+    public void setRoleId(Long roleId) {
+        this.roleId = roleId;
+    }
+
+    public Roles getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Roles roles) {
+        this.roles = roles;
     }
 }

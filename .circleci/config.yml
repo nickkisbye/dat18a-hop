@@ -56,7 +56,7 @@ jobs:
           command: git remote add dev dat18a-hop@116.203.52.174:/var/repos/dat18a-hop.git
       - run:
           name: push to dev
-          command: git push dev main
+          command: git push -f dev main
 
 workflows:
   version: 2

@@ -18,8 +18,6 @@ public class User {
         this.lastName = lastName;
     }
 
-    public User()
-    {}
 
     // standard getters and setters, default and all-args constructors
 }

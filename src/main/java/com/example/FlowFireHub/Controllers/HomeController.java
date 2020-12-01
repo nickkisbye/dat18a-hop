@@ -46,7 +46,7 @@ public class HomeController {
     public ChatMessage testing(Model model) {
         ChatMessage cm = new ChatMessage();
         cm.setContent("this is a message");
-        cm.setSender("mister big");
+        cm.setSender("john doe");
         cm.setType(ChatMessage.MessageType.CHAT);
         messageRepository.save(cm);
         return cm;

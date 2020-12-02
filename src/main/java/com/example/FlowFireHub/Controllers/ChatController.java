@@ -23,4 +23,11 @@ public class ChatController {
         headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());
         return chatMessage;
     }
+
+    @MessageMapping("/chat.sendMessage/{room}")
+    @SendTo("/topic/{room}")
+    public ChatMessage sendToRoom(@Payload ChatMessage chatMessage)
+    {
+        return chatMessage;
+    }
 }

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 import java.util.Map;
 
-@RestController
+@Controller
 public class HomeController {
 
     @Autowired
@@ -24,7 +24,7 @@ public class HomeController {
     MessageRepository messageRepository;
 
     @GetMapping("/chat")
-    public String greeting(Model model) {
+    public String chat(Model model) {
         return "chat";
     }
 

@@ -1,6 +1,8 @@
 package com.example.FlowFireHub.Controllers;
 
+import com.example.FlowFireHub.Domains.Role;
 import com.example.FlowFireHub.Domains.User;
+import com.example.FlowFireHub.Respositories.RoleRepository;
 import com.example.FlowFireHub.Respositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,8 @@ public class UserController {
     @Autowired
     UserRepository userRepository;
     private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+    @Autowired
+    RoleRepository roleRepository;
 
     @GetMapping("/")
     public Iterable<User> getAllUsers() {
@@ -33,11 +37,21 @@ public class UserController {
         }
     }
 
-    @PostMapping("/")
+    @PostMapping("/addUser")
     public ResponseEntity<User> addUser(@RequestBody User user) {
+
         Optional<User> userToAdd = userRepository.findByEmailOrUsername(user.getUsername(), user.getEmail());
         if(!userToAdd.isPresent()) {
+
+            Role role1 = new Role("Admin");
+            Role role2 = new Role("User");
+            roleRepository.save(role1);
+            roleRepository.save(role2);
+            Role role = roleRepository.findByName("Admin");
+            user.setRole(role);
+
             user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+
             return new ResponseEntity<User>(userRepository.save(user), HttpStatus.OK);
         } else {
             return new ResponseEntity<User>(user, HttpStatus.NOT_ACCEPTABLE);

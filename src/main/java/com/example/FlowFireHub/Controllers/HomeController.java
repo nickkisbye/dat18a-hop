@@ -35,7 +35,7 @@ public class HomeController {
 
     @GetMapping("/add")
     public User add(@RequestParam(name = "name", required = false, defaultValue = "World") String name, Model model) {
-        return new User("rasmus", "hoeberg");
+        return new User("rasmus");
     }
 
     @GetMapping("/testing")

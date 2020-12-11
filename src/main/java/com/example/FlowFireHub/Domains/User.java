@@ -1,29 +1,44 @@
 package com.example.FlowFireHub.Domains;
 
 import javax.persistence.*;
+import java.util.List;
+import java.util.Set;
+
 
 @Entity
-@Table(name = "users")
+@Table(name = "user")
 public class User {
 
-    @Id @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
+
     private String firstName;
     private String lastName;
     private String username;
     private String email;
     private String password;
-    private Long roleId;
 
-    @OneToOne()
-    @JoinColumn(name = "id")
-    private Roles roles;
+    @OneToOne(mappedBy = "user")
+    private Steam steam;
 
-    public User(String firstName, String lastName) {
+    @ManyToMany()
+    private Set<User> friends;
+
+    @ManyToOne()
+    private Role role;
+
+
+    public User(String firstName) {
         this.firstName = firstName;
-        this.lastName = lastName;
     }
 
+    public User() {
+    }
+
+    public void setUser(Steam steam) {
+    }
 
     public Long getId() {
         return id;
@@ -73,19 +88,27 @@ public class User {
         this.password = password;
     }
 
-    public Long getRoleId() {
-        return roleId;
+    public Steam getSteam() {
+        return steam;
     }
 
-    public void setRoleId(Long roleId) {
-        this.roleId = roleId;
+    public void setSteam(Steam steam) {
+        this.steam = steam;
     }
 
-    public Roles getRoles() {
-        return roles;
+    public Set<User> getFriends() {
+        return friends;
     }
 
-    public void setRoles(Roles roles) {
-        this.roles = roles;
+    public void setFriends(Set<User> friends) {
+        this.friends = friends;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

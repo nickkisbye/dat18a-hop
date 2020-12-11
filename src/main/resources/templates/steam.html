@@ -1,0 +1,20 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Getting Started: Serving Web Content</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<form action="https://steamcommunity.com/openid/login" method="post">
+    <input type="hidden" name="openid.identity"
+           value="http://specs.openid.net/auth/2.0/identifier_select" />
+    <input type="hidden" name="openid.claimed_id"
+           value="http://specs.openid.net/auth/2.0/identifier_select" />
+    <input type="hidden" name="openid.ns" value="http://specs.openid.net/auth/2.0" />
+    <input type="hidden" name="openid.mode" value="checkid_setup" />
+    <input type="hidden" name="openid.realm" value="http://localhost:8080/" />
+    <input type="hidden" name="openid.return_to" value="http://localhost:8080/steam/OpenId" />
+    <Button type="submit">Log in through Steam</Button>
+</form>
+</body>
+</html>

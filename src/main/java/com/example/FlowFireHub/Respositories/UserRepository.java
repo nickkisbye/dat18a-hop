@@ -1,18 +1,18 @@
 package com.example.FlowFireHub.Respositories;
 
 import com.example.FlowFireHub.Domains.User;
-import org.springframework.context.annotation.Bean;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.RequestBody;
+
 
 import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends CrudRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, Long> {
+
     List<User> findByLastName(String lastName);
     User findById(long id);
 
@@ -24,4 +24,22 @@ public interface UserRepository extends CrudRepository<User, Long> {
 
     @Query("select u from User u where u.username=:username")
     Optional<User> findByUsername(String username);
+
+    @Query(value = "SELECT * FROM user_friends where USER_ID = 1", nativeQuery = true)
+    List<User> getAllTest();
+
+//    @Query(value = "SELECT * FROM user_friends", nativeQuery = true)
+//    List<User> getAllTest1();
+
+    @Query("select u from User u inner join fetch u.friends where u.id = :id")
+    List<User> getAllTest1(long id);
+
+    @Query(value = "SELECT * FROM user inner join user_friends", nativeQuery = true)
+    List<User> getAllTest2(long id);
+
+    List<User> findAllFriendsById(Long id);
+
+    List<User> findByFriends_id(Long id);
+
+
 }

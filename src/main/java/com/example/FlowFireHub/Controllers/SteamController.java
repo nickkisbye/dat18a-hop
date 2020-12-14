@@ -1,7 +1,9 @@
 package com.example.FlowFireHub.Controllers;
 
+import com.example.FlowFireHub.Domains.Role;
 import com.example.FlowFireHub.Domains.Steam;
 import com.example.FlowFireHub.Domains.User;
+import com.example.FlowFireHub.Respositories.RoleRepository;
 import com.example.FlowFireHub.Respositories.SteamRepository;
 import com.example.FlowFireHub.Utilities.SteamManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +21,11 @@ public class SteamController {
     SteamRepository steamRepository;
     @Autowired
     SteamManager steamManager;
+    @Autowired
+    RoleRepository roleRepository;
 
 
-    @GetMapping("/getAllSteamUsers")
+    @GetMapping("/getAllUsers")
     public Iterable<Steam> getAllUsers() {
         Iterable<Steam> steam = steamRepository.findAll();
         return steam;
@@ -37,8 +41,8 @@ public class SteamController {
         }
     }
 
-    @DeleteMapping("/deleteUser/{id}")
-    public ResponseEntity<User> deleteUser(@PathVariable("id") Long id) {
+    @PostMapping("/deleteUser/{id}")
+    public ResponseEntity<Steam> deleteUser(@PathVariable("id") Long id) {
         try {
             steamRepository.deleteById(id);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -56,7 +60,8 @@ public class SteamController {
             String username = steamManager.getKey(steamData, "personaname");
             steam.setUsername(username);
             steam.setSteamid(steamid);
-            steam.setUser(new User(username));
+            Role role = roleRepository.findByName("Admin");
+            steam.setUser(new User(username, role));
             return new ResponseEntity<Steam>(steamRepository.save(steam), HttpStatus.OK);
         } else {
             return new ResponseEntity<Steam>(steam, HttpStatus.NOT_ACCEPTABLE);

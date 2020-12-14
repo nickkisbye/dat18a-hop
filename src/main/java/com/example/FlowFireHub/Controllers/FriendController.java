@@ -23,7 +23,7 @@ public class FriendController {
     public ResponseEntity<Friend> testfriend(@RequestBody Friend friend) {
         User user = userRepository.findById(Long.parseLong(friend.getUserid()));
         User user2 = userRepository.findById(Long.parseLong(friend.getFriendid()));
-        user.getFriends().add(user2);
+        user.getFriend().add(user2);
         userRepository.save(user);
         return new ResponseEntity<Friend>(HttpStatus.OK);
     }
@@ -31,7 +31,7 @@ public class FriendController {
     @GetMapping("/getById/{id}")
     public List<User> getUserById(@PathVariable("id") Long id) {
         System.out.println("test");
-        List<User> user = userRepository.findByFriends_id(id);
+        List user = userRepository.findAllFriendById(id);
         System.out.println("ads");
         //List<User> user = userRepository.findFriendsById(id);
         return user;
@@ -42,7 +42,7 @@ public class FriendController {
         try {
             User user = userRepository.findById(Long.parseLong(friend.getUserid()));
             User user2 = userRepository.findById(Long.parseLong(friend.getFriendid()));
-            user.getFriends().remove(user2);
+            user.getFriend().remove(user2);
             userRepository.save(user);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {

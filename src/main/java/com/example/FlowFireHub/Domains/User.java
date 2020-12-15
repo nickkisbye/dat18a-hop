@@ -1,9 +1,8 @@
 package com.example.FlowFireHub.Domains;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.engine.internal.Cascade;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -18,19 +17,20 @@ public class User {
 
     private String username;
 
-    @JsonIgnoreProperties("friend")
-    @OneToOne(mappedBy = "user")
+    @JsonIgnore
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Steam steam;
 
-    @JsonIgnoreProperties("friend")
-    @OneToOne(mappedBy = "user")
+    @JsonIgnore
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private FireFlow fireFlow;
 
-    @JsonIgnoreProperties("friend")
-    @ManyToMany()
-    private Set<User> friend;
+    @JsonIgnore
+    @OneToMany(mappedBy="user", cascade = CascadeType.ALL)
+    private Set<Friend> friend = new HashSet<>();
 
-    @JsonIgnoreProperties("friend")
+    @JsonIgnore
+//    @JsonIgnoreProperties("friend")
     @ManyToOne()
     private Role role;
 
@@ -44,10 +44,6 @@ public class User {
     }
 
     public User(String username, Long id) {
-    }
-
-    public void setUser(Steam steam) {
-
     }
 
     public Long getId() {
@@ -74,14 +70,6 @@ public class User {
         this.steam = steam;
     }
 
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
     public FireFlow getFireFlow() {
         return fireFlow;
     }
@@ -90,13 +78,19 @@ public class User {
         this.fireFlow = fireFlow;
     }
 
-    public Set<User> getFriend() {
+    public Set<Friend> getFriend() {
         return friend;
     }
 
-    public void setFriend(Set<User> friend) {
+    public void setFriend(Set<Friend> friend) {
         this.friend = friend;
     }
 
+    public Role getRole() {
+        return role;
+    }
 
+    public void setRole(Role role) {
+        this.role = role;
+    }
 }

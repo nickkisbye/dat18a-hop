@@ -1,6 +1,8 @@
 package com.example.FlowFireHub.Domains;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
@@ -18,6 +20,7 @@ public class FireFlow {
 
     @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "user_id")
     private User user;
 

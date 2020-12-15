@@ -46,7 +46,7 @@ public class FlowFireController {
     @DeleteMapping("/deleteUser/{id}")
     public ResponseEntity<FireFlow> deleteUser(@PathVariable("id") Long id) {
         try {
-            fireFlowRepository.deleteById(id);
+            fireFlowRepository.deleteUserById(id);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

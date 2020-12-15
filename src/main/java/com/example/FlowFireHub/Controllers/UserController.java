@@ -6,7 +6,6 @@ import com.example.FlowFireHub.Respositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
@@ -27,19 +26,21 @@ public class UserController {
     }
 
     @GetMapping("/getUser/{id}")
-    public Optional<User> getUserById(@PathVariable("id") Long id) {
-        Optional<User> user = userRepository.findById(id);
-        if(user.isPresent()) {
-            return user;
+    public ResponseEntity<User> getUserById(@PathVariable("id") Long id) {
+        Optional<User> optinalEntity =  userRepository.findById(id);
+        if(optinalEntity.isPresent()) {
+            User user = optinalEntity.get();
+            return new ResponseEntity<>(user,HttpStatus.OK);
         } else {
-            return null;
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
-    @PostMapping("/deleteUser/{id}")
+    @DeleteMapping("/deleteUser/{id}")
     public ResponseEntity<User> deleteUser(@PathVariable("id") Long id) {
+        System.out.println(id);
         try {
-            userRepository.deleteById(id);
+            userRepository.deleteUserById(id);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

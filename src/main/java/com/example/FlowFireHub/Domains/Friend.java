@@ -1,28 +1,87 @@
 package com.example.FlowFireHub.Domains;
 
-import org.springframework.stereotype.Component;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
-@Component
+import javax.persistence.*;
+import java.io.Serializable;
+
+@Entity
 public class Friend {
 
-    private String userid;
-    private String friendid;
+    @EmbeddedId
+    private Key key;
 
-    public String getUserid() {
-        return userid;
+    @JsonIgnore
+    @ManyToOne()
+    @MapsId("user_id")
+    private User user;
+
+    @JsonIgnore
+    @ManyToOne()
+    @MapsId("friend_id")
+    private User friend;
+
+    private boolean isActive;
+
+    public Friend(User _user, User _friend) {
+        this.user = _user;
+        this.friend = _friend;
     }
 
-    public void setUserid(String userid) {
-        this.userid = userid;
+    public Friend(Key _key, User _user, User _friend) {
+        this.key = _key;
+        this.user = _user;
+        this.friend = _friend;
     }
 
-    public String getFriendid() {
-        return friendid;
+    public Friend() {
     }
 
-    public void setFriendid(String friendid) {
-        this.friendid = friendid;
+    public Key getKey() {
+        return key;
     }
 
+    public void setKey(Key key) {
+        this.key = key;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public User getFriend() {
+        return friend;
+    }
+
+    public void setFriend(User friend) {
+        this.friend = friend;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
+    @Embeddable
+    public static class Key implements Serializable {
+        private Long user_id;
+        private Long friend_id;
+
+        public Key(Long owner, Long person) {
+            this.user_id = owner;
+            this.friend_id = person;
+        }
+
+        public Key() {
+        }
+
+    }
 }

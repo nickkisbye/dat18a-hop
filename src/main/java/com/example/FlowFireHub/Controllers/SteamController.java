@@ -32,19 +32,20 @@ public class SteamController {
     }
 
     @GetMapping("/getUser/{id}")
-    public Optional<Steam> getUserById(@PathVariable("id") Long id) {
-        Optional<Steam> steam = steamRepository.findById(id);
-        if(steam.isPresent()) {
-            return steam;
+    public ResponseEntity<Steam> getUserById(@PathVariable("id") Long id) {
+        Optional<Steam> steamEntity =  steamRepository.findById(id);
+        if(steamEntity.isPresent()) {
+            Steam steam = steamEntity.get();
+            return new ResponseEntity<>(steam, HttpStatus.OK);
         } else {
-            return null;
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
-    @PostMapping("/deleteUser/{id}")
+    @DeleteMapping("/deleteUser/{id}")
     public ResponseEntity<Steam> deleteUser(@PathVariable("id") Long id) {
         try {
-            steamRepository.deleteById(id);
+            steamRepository.deleteUserById(id);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

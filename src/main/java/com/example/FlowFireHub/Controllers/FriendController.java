@@ -69,6 +69,7 @@ public class FriendController {
 
     @GetMapping("/getFriends")
     public Iterable<UserType> getFriends(@RequestBody User user) {
+        System.out.println(user.getId());
         Iterable<UserType> users = friendRepository.getFriends(user.getId());
         return users;
     }

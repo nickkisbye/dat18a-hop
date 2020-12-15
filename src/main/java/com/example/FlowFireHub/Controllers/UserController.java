@@ -7,11 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.Serializable;
 import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/users", path = "/users")
-public class UserController {
+public class UserController implements Serializable {
 
     @Autowired
     UserRepository userRepository;
@@ -43,6 +45,7 @@ public class UserController {
             userRepository.deleteUserById(id);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
+            System.out.println(e);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }

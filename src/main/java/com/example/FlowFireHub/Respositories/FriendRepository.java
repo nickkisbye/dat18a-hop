@@ -26,7 +26,7 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
             "union\n" +
             "select username, id\n" +
             "from user\n" +
-            "INNER JOIN friend on user.id = friend.user_id where friend.friend_id = :id and IS_ACTIVE = 'TRUE'", nativeQuery = true)
+            "INNER JOIN friend on user.id = friend.user_id where friend.friend_id = :id and IS_ACTIVE = '1'", nativeQuery = true)
     List<UserType> getFriends(Long id);
 
     @Modifying

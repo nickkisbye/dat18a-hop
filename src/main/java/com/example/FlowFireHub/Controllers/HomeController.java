@@ -24,6 +24,11 @@ public class HomeController {
         return "chat";
     }
 
+    @GetMapping("/steam")
+    public String steam(Model model) {
+        return "steam";
+    }
+
 //    @GetMapping("/add")
 //    public User add(@RequestParam(name = "name", required = false, defaultValue = "World") String name, Model model) {
 //        User testuser = new User("rasmus", "hoeberg");
@@ -35,7 +40,7 @@ public class HomeController {
 
     @GetMapping("/add")
     public User add(@RequestParam(name = "name", required = false, defaultValue = "World") String name, Model model) {
-        return new User("rasmus");
+        return new User();
     }
 
     @GetMapping("/testing")

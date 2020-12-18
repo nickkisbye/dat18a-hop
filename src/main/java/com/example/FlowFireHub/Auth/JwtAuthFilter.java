@@ -22,53 +22,42 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureException;
 
-// This class is created to validate the jwt authentication token.
-// If the token will be valid the requests to the protected url will be served and the response will be given back to the user.
-// If the token is not valid, an exception will be thrown to the user.
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        // Fetching the authorization header from the request.
-        // This header will contain the bearer token having the jwt token.
-        String authenticationHeader= request.getHeader(Iconstants.HEADER);
+        String authenticationHeader= request.getHeader(IValues.HEADER);
 
         try {
             SecurityContext context= SecurityContextHolder.getContext();
 
             if(authenticationHeader != null && authenticationHeader.startsWith("Bearer")) {
 
-                final String bearerTkn= authenticationHeader.replaceAll(Iconstants.BEARER_TOKEN, "");
-                System.out.println("Following token is received from the protected url= "+ bearerTkn);
+                String bearer = authenticationHeader.replaceAll(IValues.BEARER_TOKEN, "");
 
                 try {
-                    // Parsing the jwt token.
-                    Jws<Claims> claims = Jwts.parser().requireIssuer(Iconstants.ISSUER).setSigningKey(Iconstants.SECRET_KEY).parseClaimsJws(bearerTkn);
+                    Jws<Claims> claims = Jwts.parser().requireIssuer(IValues.ISSUER).setSigningKey(IValues.SECRET_KEY).parseClaimsJws(bearer);
+                    String user = (String) claims.getBody().get("usr");
+                    String roles = (String) claims.getBody().get("rol");
 
-                    // Obtaining the claims from the parsed jwt token.
-                    String user= (String) claims.getBody().get("usr");
-                    String roles= (String) claims.getBody().get("rol");
-
-                    // Creating the list of granted-authorities for the received roles.
                     List<GrantedAuthority> authority= new ArrayList<GrantedAuthority>();
                     for(String role: roles.split(","))
                         authority.add(new SimpleGrantedAuthority(role));
 
-                    // Creating an authentication object using the claims.
-                    MyAuthToken authenticationTkn= new MyAuthToken(user, null, authority);
-                    // Storing the authentication object in the security context.
+                    AuthToken authenticationTkn= new AuthToken(user, null, authority);
+
                     context.setAuthentication(authenticationTkn);
                 } catch (SignatureException e) {
-                    throw new ServletException("Invalid token.");
+                    throw new ServletException("Token is invalid.");
                 }
             }
 
             filterChain.doFilter(request, response);
             context.setAuthentication(null);
         } catch(AuthenticationException ex) {
-            throw new ServletException("Authentication exception.");
+            throw new ServletException("Authentication failed.");
         }
     }
 }

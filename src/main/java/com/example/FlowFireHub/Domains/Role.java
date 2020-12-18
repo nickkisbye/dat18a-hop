@@ -1,5 +1,7 @@
 package com.example.FlowFireHub.Domains;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -12,6 +14,7 @@ public class Role {
     private Long id;
     private String name;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
     private List<User> user;
 

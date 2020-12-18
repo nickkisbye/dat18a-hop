@@ -1,7 +1,8 @@
 package com.example.FlowFireHub.Domains;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -14,30 +15,35 @@ public class User {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
-    private String firstName;
-    private String lastName;
     private String username;
-    private String email;
-    private String password;
 
-    @OneToOne(mappedBy = "user")
+    @JsonIgnore
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Steam steam;
 
-    @ManyToMany()
-    private Set<User> friends;
+    @JsonIgnore
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private FireFlow fireFlow;
 
+    @JsonIgnore
+    @OneToMany(mappedBy="user", cascade = CascadeType.ALL)
+    private Set<Friend> friend = new HashSet<>();
+
+    @JsonIgnore
+//    @JsonIgnoreProperties("friend")
     @ManyToOne()
     private Role role;
 
 
-    public User(String firstName) {
-        this.firstName = firstName;
-    }
-
     public User() {
     }
 
-    public void setUser(Steam steam) {
+    public User(String username, Role role) {
+        this.username = username;
+        this.role = role;
+    }
+
+    public User(String username, Long id) {
     }
 
     public Long getId() {
@@ -48,44 +54,12 @@ public class User {
         this.id = id;
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
     public String getUsername() {
         return username;
     }
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public Steam getSteam() {
@@ -96,12 +70,20 @@ public class User {
         this.steam = steam;
     }
 
-    public Set<User> getFriends() {
-        return friends;
+    public FireFlow getFireFlow() {
+        return fireFlow;
     }
 
-    public void setFriends(Set<User> friends) {
-        this.friends = friends;
+    public void setFireFlow(FireFlow fireFlow) {
+        this.fireFlow = fireFlow;
+    }
+
+    public Set<Friend> getFriend() {
+        return friend;
+    }
+
+    public void setFriend(Set<Friend> friend) {
+        this.friend = friend;
     }
 
     public Role getRole() {

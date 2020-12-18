@@ -1,7 +1,8 @@
 package com.example.FlowFireHub.Controllers;
 
-import com.example.FlowFireHub.Auth.Iconstants;
-import com.example.FlowFireHub.Domains.User;
+import com.example.FlowFireHub.Auth.IValues;
+import com.example.FlowFireHub.Domains.FireFlow;
+import com.example.FlowFireHub.Respositories.FireFlowRepository;
 import com.example.FlowFireHub.Respositories.UserRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.ServletException;
-import javax.swing.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -31,35 +31,31 @@ public class AuthController {
     @Autowired
     private UserRepository userRepository;
 
-    @PostMapping("/token")
-    public ResponseEntity<String> getToken(@RequestBody User login) throws ServletException {
+    @Autowired
+    private FireFlowRepository fireFlowRepository;
 
+    @PostMapping("/token")
+    public ResponseEntity<String> getToken(@RequestBody FireFlow user) throws ServletException {
         String jwttoken = "";
 
-        // If the username and password fields are empty -> Throw an exception!
-        if (login.getUsername().isEmpty() || login.getPassword().isEmpty())
+        if (user.getUsername().isEmpty() || user.getPassword().isEmpty())
             return new ResponseEntity<String>("Username or password cannot be empty.", HttpStatus.BAD_REQUEST);
 
-        String name = login.getUsername(),
-                password = login.getPassword();
-
-        // If the username and password are not valid -> Thrown an invalid credentials exception!
-
-        Optional<User> checkForUser = userRepository.findByUsername(name);
+        Optional<FireFlow> checkForUser = fireFlowRepository.findByUsername(user.getUsername());
 
         if (!checkForUser.isPresent())
             return new ResponseEntity<String>("Invalid username.", HttpStatus.UNAUTHORIZED);
         else {
-            if(bCryptPasswordEncoder.matches(password, checkForUser.get().getPassword())) {
+            if(bCryptPasswordEncoder.matches(user.getPassword(), checkForUser.get().getPassword())) {
                 // Creating JWT using the user credentials.
                 Map<String, Object> claims = new HashMap<String, Object>();
-                claims.put("usr", login.getUsername());
+                claims.put("usr", user.getUsername());
                 claims.put("sub", "Authentication token");
-                claims.put("iss", Iconstants.ISSUER);
+                claims.put("iss", IValues.ISSUER);
                 claims.put("rol", "Administrator, Developer");
                 claims.put("iat", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
-                jwttoken = Jwts.builder().setClaims(claims).signWith(SignatureAlgorithm.HS512, Iconstants.SECRET_KEY).compact();
+                jwttoken = Jwts.builder().setClaims(claims).signWith(SignatureAlgorithm.HS512, IValues.SECRET_KEY).compact();
                 System.out.println("Returning the following token to the user= " + jwttoken);
             } else {
                 return new ResponseEntity<String>("Invalid password.", HttpStatus.UNAUTHORIZED);

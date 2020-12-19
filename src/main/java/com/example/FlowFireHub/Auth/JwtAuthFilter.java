@@ -35,10 +35,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
             if(authenticationHeader != null && authenticationHeader.startsWith("Bearer")) {
 
-                String bearer = authenticationHeader.replaceAll(IValues.BEARER_TOKEN, "");
+                final String token = authenticationHeader.replaceAll(IValues.BEARER_TOKEN, "");
+                System.out.println("token: " + token);
 
                 try {
-                    Jws<Claims> claims = Jwts.parser().requireIssuer(IValues.ISSUER).setSigningKey(IValues.SECRET_KEY).parseClaimsJws(bearer);
+                    Jws<Claims> claims = Jwts.parser().requireIssuer(IValues.ISSUER).setSigningKey(IValues.SECRET_KEY).parseClaimsJws(token);
+
                     String user = (String) claims.getBody().get("usr");
                     String roles = (String) claims.getBody().get("rol");
 
@@ -47,17 +49,16 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                         authority.add(new SimpleGrantedAuthority(role));
 
                     AuthToken authenticationTkn= new AuthToken(user, null, authority);
-
                     context.setAuthentication(authenticationTkn);
                 } catch (SignatureException e) {
-                    throw new ServletException("Token is invalid.");
+                    throw new ServletException("Invalid token.");
                 }
             }
 
             filterChain.doFilter(request, response);
             context.setAuthentication(null);
         } catch(AuthenticationException ex) {
-            throw new ServletException("Authentication failed.");
+            throw new ServletException("Authentication exception.");
         }
     }
 }

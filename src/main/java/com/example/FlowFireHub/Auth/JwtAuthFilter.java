@@ -10,6 +10,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.example.FlowFireHub.Domains.User;
+import com.example.FlowFireHub.Respositories.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -24,31 +27,24 @@ import io.jsonwebtoken.SignatureException;
 
 public class JwtAuthFilter extends OncePerRequestFilter {
 
+    @Autowired
+    private UserRepository userRepository;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        String authenticationHeader= request.getHeader(IValues.HEADER);
+        String authenticationHeader = request.getHeader(IValues.HEADER);
 
         try {
-            SecurityContext context= SecurityContextHolder.getContext();
+            SecurityContext context = SecurityContextHolder.getContext();
 
-            if(authenticationHeader != null && authenticationHeader.startsWith("Bearer")) {
+            if (authenticationHeader != null && authenticationHeader.startsWith("Bearer")) {
 
                 String bearer = authenticationHeader.replaceAll(IValues.BEARER_TOKEN, "");
 
                 try {
-                    Jws<Claims> claims = Jwts.parser().requireIssuer(IValues.ISSUER).setSigningKey(IValues.SECRET_KEY).parseClaimsJws(bearer);
-                    String user = (String) claims.getBody().get("usr");
-                    String roles = (String) claims.getBody().get("rol");
-
-                    List<GrantedAuthority> authority= new ArrayList<GrantedAuthority>();
-                    for(String role: roles.split(","))
-                        authority.add(new SimpleGrantedAuthority(role));
-
-                    AuthToken authenticationTkn= new AuthToken(user, null, authority);
-
-                    context.setAuthentication(authenticationTkn);
+                    authenticateToken(bearer);
                 } catch (SignatureException e) {
                     throw new ServletException("Token is invalid.");
                 }
@@ -56,8 +52,26 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
             filterChain.doFilter(request, response);
             context.setAuthentication(null);
-        } catch(AuthenticationException ex) {
+        } catch (AuthenticationException ex) {
             throw new ServletException("Authentication failed.");
         }
+    }
+
+    public User authenticateToken(String token) throws ServletException {
+        User result = null;
+
+        SecurityContext context = SecurityContextHolder.getContext();
+        Jws<Claims> claims = Jwts.parser().requireIssuer(IValues.ISSUER).setSigningKey(IValues.SECRET_KEY).parseClaimsJws(token);
+        String user = (String) claims.getBody().get("usr");
+        String roles = (String) claims.getBody().get("rol");
+        List<GrantedAuthority> authority = new ArrayList<GrantedAuthority>();
+        for (String role : roles.split(","))
+            authority.add(new SimpleGrantedAuthority(role));
+
+        AuthToken authenticationTkn = new AuthToken(user, null, authority);
+        result = userRepository.findByUsername(user);
+        context.setAuthentication(authenticationTkn);
+
+        return result;
     }
 }

@@ -8,8 +8,11 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class ChatController {
@@ -43,13 +46,11 @@ public class ChatController {
 //        return chatMessage;
 //    }
 
-//    @MessageMapping("/chat.sendMessage/{room}/{token}")
     @MessageMapping("/chat.sendMessage/{room}")
     @SendTo("/topic/{room}")
     public ChatMessage sendToRoom(@Payload ChatMessage chatMessage, SimpMessageHeaderAccessor headerAccessor)
     {
-        System.out.println(headerAccessor.getMessageHeaders());
-//        jwtAuthFilter.authenticateToken(headerAccessor.getMessageHeaders());
         return chatMessage;
     }
+
 }

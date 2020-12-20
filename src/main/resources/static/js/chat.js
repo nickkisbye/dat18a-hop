@@ -34,9 +34,13 @@ function connect(event) {
 }
 
 function onConnected() {
+    let subHeader = {
+        Bearer: "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBdXRoZW50aWNhdGlvbiB0b2tlbiIsInVzciI6IlJhc211cyIsImlzcyI6ImR1Y2F0LXNwcmluZ2Jvb3Qtand0dG9rZW4iLCJpYXQiOiIyMDIwLTEyLTE5IDE3OjUxOjMwIiwicm9sIjoiQWRtaW5pc3RyYXRvciwgRGV2ZWxvcGVyIn0.C06nkHYj0aZMUAWUOBFGzQuoHCA8QbwAP5EG2WroZGxly_h3rXGK2vQkATxLQewm9qk1ERVXs92ffzbrox1kNw",
+        room: 1
+    }
     // Subscribe to the Public Topic
-    stompClient.subscribe('/topic/public', onMessageReceived);
-    stompClient.subscribe('/topic/' + room, onMessageReceived);
+    stompClient.subscribe('/topic/public', onMessageReceived, subHeader);
+    stompClient.subscribe('/topic/' + room, onMessageReceived, subHeader);
 
     // Tell your username to the server
     stompClient.send("/app/chat.addUser",
@@ -102,7 +106,6 @@ function onMessageReceived(payload) {
     messageArea.appendChild(messageElement);
     messageArea.scrollTop = messageArea.scrollHeight;
 }
-
 
 function getAvatarColor(messageSender) {
     var hash = 0;

@@ -11,9 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletException;
 import java.time.LocalDateTime;
@@ -68,5 +66,11 @@ public class AuthController {
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @GetMapping("/createpassword")
+    public ResponseEntity<String> createPassword(@RequestParam String password) {
+        System.out.println(password);
+        return new ResponseEntity<>(bCryptPasswordEncoder.encode(password), HttpStatus.OK);
     }
 }

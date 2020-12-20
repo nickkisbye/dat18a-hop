@@ -39,17 +39,11 @@ public class ChatController {
         return chatMessage;
     }
 
-//    @MessageMapping("/chat.sendMessage/{room}")
-//    @SendTo("/topic/{room}")
-//    public ChatMessage sendToRoom(@Payload ChatMessage chatMessage)
-//    {
-//        return chatMessage;
-//    }
-
     @MessageMapping("/chat.sendMessage/{room}")
     @SendTo("/topic/{room}")
     public ChatMessage sendToRoom(@Payload ChatMessage chatMessage, SimpMessageHeaderAccessor headerAccessor)
     {
+        chatMessageRepository.save(chatMessage);
         return chatMessage;
     }
 

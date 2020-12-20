@@ -21,7 +21,7 @@ function connect(event) {
     username = document.querySelector('#name').value.trim();
     room = document.querySelector('#room').value.trim();
 
-    if(username && room) {
+    if (username && room) {
         usernamePage.classList.add('hidden');
         chatPage.classList.remove('hidden');
 
@@ -39,8 +39,17 @@ function onConnected() {
         room: 1
     }
     // Subscribe to the Public Topic
-    stompClient.subscribe('/topic/public', onMessageReceived, subHeader);
-    stompClient.subscribe('/topic/' + room, onMessageReceived, subHeader);
+    stompClient.subscribe('/topic/public', onMessageReceived, {
+        Bearer: "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBdXRoZW50aWNhdGlvbiB0b2tlbiIsInVzciI6IlJhc211cyIsImlzcyI6ImR1Y2F0LXNwcmluZ2Jvb3Qtand0dG9rZW4iLCJpYXQiOiIyMDIwLTEyLTE5IDE3OjUxOjMwIiwicm9sIjoiQWRtaW5pc3RyYXRvciwgRGV2ZWxvcGVyIn0.C06nkHYj0aZMUAWUOBFGzQuoHCA8QbwAP5EG2WroZGxly_h3rXGK2vQkATxLQewm9qk1ERVXs92ffzbrox1kNw",
+        room: 1
+    });
+    stompClient.subscribe('/topic/' + room, onMessageReceived, {
+        Bearer: "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBdXRoZW50aWNhdGlvbiB0b2tlbiIsInVzciI6IlJhc211cyIsImlzcyI6ImR1Y2F0LXNwcmluZ2Jvb3Qtand0dG9rZW4iLCJpYXQiOiIyMDIwLTEyLTE5IDE3OjUxOjMwIiwicm9sIjoiQWRtaW5pc3RyYXRvciwgRGV2ZWxvcGVyIn0.C06nkHYj0aZMUAWUOBFGzQuoHCA8QbwAP5EG2WroZGxly_h3rXGK2vQkATxLQewm9qk1ERVXs92ffzbrox1kNw",
+        room: 1
+    });
+    // stompClient.subscribe('/topic/public', onMessageReceived);
+    // stompClient.subscribe('/topic/' + room, onMessageReceived);
+
 
     // Tell your username to the server
     stompClient.send("/app/chat.addUser",
@@ -58,7 +67,7 @@ function onError(error) {
 
 function sendMessage(event) {
     var messageContent = messageInput.value.trim();
-    if(messageContent && stompClient) {
+    if (messageContent && stompClient) {
         var chatMessage = {
             sender: username,
             content: messageInput.value,
@@ -75,7 +84,7 @@ function onMessageReceived(payload) {
 
     var messageElement = document.createElement('li');
 
-    if(message.type === 'JOIN') {
+    if (message.type === 'JOIN') {
         messageElement.classList.add('event-message');
         message.content = message.sender + ' joined!';
     } else if (message.type === 'LEAVE') {

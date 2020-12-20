@@ -93,20 +93,21 @@ public class TopicSubscriptionInterceptor implements ChannelInterceptor {
                 System.out.println(user.getUsername());
                 // succefully authenticated user
                 // now check if we are allowed to subscribe to room
-//                if (StompCommand.SUBSCRIBE.equals(headerAccessor.getCommand())) {
-//                    if(headerAccessor.containsNativeHeader("room")) {
-//                        Long roomId = Long.parseLong(headerAccessor.getNativeHeader("room").get(0));
-//
-//                        ChatRoom chatRoom = chatRoomRepository.findById(roomId).get();
-//                        if(!chatRoom.isPrivate() || chatRoom.getUsers().contains(user)) {
-//                            // hurray you are allowed in the room
-//                            System.out.println("hej");
-//                        }
-//                        else {
-//                            throw new IllegalArgumentException("No permission in this chat room");
-//                        }
-//                    }
-//                }
+                if (StompCommand.SUBSCRIBE.equals(headerAccessor.getCommand())) {
+                    if(headerAccessor.containsNativeHeader("room")) {
+                        Long roomId = Long.parseLong(headerAccessor.getNativeHeader("room").get(0));
+
+                        ChatRoom chatRoom = chatRoomRepository.findById(roomId).get();
+                        System.out.println(headerAccessor.getDestination());
+                        System.out.println(chatRoom.getName());
+                        if(!chatRoom.isPrivate() || chatRoom.getUsers().contains(user)) {
+                            System.out.println("hej");
+                        }
+                        else {
+                            throw new IllegalArgumentException("No permission in this chat room");
+                        }
+                    }
+                }
             } catch (ServletException e) {
                 System.out.println(e);
             }
@@ -116,15 +117,5 @@ public class TopicSubscriptionInterceptor implements ChannelInterceptor {
 
         return message;
     }
-
-//    @Override
-//    public void postSend(Message<?> message, MessageChannel channel, boolean sent) {
-//        // TODO (rhoe) save chatmessage in repo here
-////        ChatMessage chatMessage = new ChatMessage();
-////        message.setContent(message.getPayload());
-////
-////        message.setSender(message.getSender());
-////        chatMessageRepository.save(message);
-//    }
-
+    
 }

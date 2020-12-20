@@ -43,37 +43,32 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
             if (authenticationHeader != null && authenticationHeader.startsWith("Bearer")) {
 
-                String bearer = authenticationHeader.replaceAll(IValues.BEARER_TOKEN, "");
+                final String token = authenticationHeader.replaceAll(IValues.BEARER_TOKEN, "");
+                System.out.println("token: " + token);
 
                 try {
-                    authenticateToken(bearer);
+
+                    Jws<Claims> claims = Jwts.parser().requireIssuer(IValues.ISSUER).setSigningKey(IValues.SECRET_KEY).parseClaimsJws(token);
+
+                    String user = (String) claims.getBody().get("usr");
+                    String roles = (String) claims.getBody().get("rol");
+
+                    List<GrantedAuthority> authority= new ArrayList<GrantedAuthority>();
+                    for(String role: roles.split(","))
+                        authority.add(new SimpleGrantedAuthority(role));
+
+                    AuthToken authenticationTkn= new AuthToken(user, null, authority);
+                    context.setAuthentication(authenticationTkn);
                 } catch (SignatureException e) {
-                    throw new ServletException("Token is invalid.");
+                    throw new ServletException("Invalid token.");
                 }
             }
 
             filterChain.doFilter(request, response);
             context.setAuthentication(null);
-        } catch (AuthenticationException ex) {
-            throw new ServletException("Authentication failed.");
+
+        } catch(AuthenticationException ex) {
+            throw new ServletException("Authentication exception.");
         }
-    }
-
-    public User authenticateToken(String token) throws ServletException {
-        User result = null;
-
-        SecurityContext context = SecurityContextHolder.getContext();
-        Jws<Claims> claims = Jwts.parser().requireIssuer(IValues.ISSUER).setSigningKey(IValues.SECRET_KEY).parseClaimsJws(token);
-        String user = (String) claims.getBody().get("usr");
-        String roles = (String) claims.getBody().get("rol");
-        List<GrantedAuthority> authority = new ArrayList<GrantedAuthority>();
-        for (String role : roles.split(","))
-            authority.add(new SimpleGrantedAuthority(role));
-
-        AuthToken authenticationTkn = new AuthToken(user, null, authority);
-        result = userRepository.findByUsername(user);
-        context.setAuthentication(authenticationTkn);
-
-        return result;
     }
 }

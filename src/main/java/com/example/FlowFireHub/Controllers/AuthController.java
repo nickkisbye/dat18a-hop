@@ -40,6 +40,7 @@ public class AuthController {
             return new ResponseEntity<String>("Username or password cannot be empty.", HttpStatus.BAD_REQUEST);
 
         Optional<FireFlow> checkForUser = fireFlowRepository.findByUsername(user.getUsername());
+        String role = userRepository.findByUsername(user.getUsername()).get().getRole().getName();
 
         if (!checkForUser.isPresent())
             return new ResponseEntity<String>("Invalid username.", HttpStatus.UNAUTHORIZED);
@@ -50,11 +51,11 @@ public class AuthController {
                 claims.put("usr", user.getUsername());
                 claims.put("sub", "Authentication token");
                 claims.put("iss", IValues.ISSUER);
-                claims.put("rol", "Administrator, Developer");
+                claims.put("rol", role);
                 claims.put("iat", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
                 jwttoken = Jwts.builder().setClaims(claims).signWith(SignatureAlgorithm.HS512, IValues.SECRET_KEY).compact();
-                System.out.println("Returning the following token to the user= " + jwttoken);
+                System.out.println("Returning token: " + jwttoken);
             } else {
                 return new ResponseEntity<String>("Invalid password.", HttpStatus.UNAUTHORIZED);
             }

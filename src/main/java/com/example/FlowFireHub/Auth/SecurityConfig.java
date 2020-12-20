@@ -20,30 +20,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new JwtAuthFilter();
     }
 
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//        http
-//                .authorizeRequests()
-//                .antMatchers("/token")
-//                .permitAll()
-//                .and().authorizeRequests().antMatchers("/users/*").hasAuthority("Administrator")
-//                .anyRequest()
-//                .authenticated()
-//                .and()
-//                .csrf().disable()
-//                .addFilterBefore(jwtAuthenticationFilter(),
-//                        UsernamePasswordAuthenticationFilter.class);
-//    }
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/**").permitAll();
+        http
+                .authorizeRequests()
+                .antMatchers("/token")
+                .permitAll()
+                .and().authorizeRequests().antMatchers("/users/*").hasAuthority("Administrator")
+                .anyRequest()
+                .authenticated()
+                .and()
+                .csrf().disable()
+                .addFilterBefore(jwtAuthenticationFilter(),
+                        UsernamePasswordAuthenticationFilter.class);
     }
 
-    @Override
-    public void configure(WebSecurity http) throws Exception {
-        http
-                .ignoring()
-                .antMatchers("/h2-console/**");
-    }
 }

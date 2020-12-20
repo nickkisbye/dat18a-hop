@@ -117,5 +117,5 @@ public class TopicSubscriptionInterceptor implements ChannelInterceptor {
 
         return message;
     }
-    
+
 }

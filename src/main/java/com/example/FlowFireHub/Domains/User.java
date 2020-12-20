@@ -1,6 +1,7 @@
 package com.example.FlowFireHub.Domains;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -12,7 +13,7 @@ public class User {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String username;
@@ -26,14 +27,21 @@ public class User {
     private FireFlow fireFlow;
 
     @JsonIgnore
-    @OneToMany(mappedBy="user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Friend> friend = new HashSet<>();
 
     @JsonIgnore
 //    @JsonIgnoreProperties("friend")
     @ManyToOne()
     private Role role;
+//
+//    @JsonIgnore
+//    @ManyToMany
+//    private Set<ChatRoom> chatRooms;
 
+    @JsonIgnore
+    @ManyToMany
+    private Set<ChatMessage> chatMessages;
 
     public User() {
     }
@@ -92,5 +100,21 @@ public class User {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+//    public Set<ChatRoom> getChatRooms() {
+//        return chatRooms;
+//    }
+//
+//    public void setChatRooms(Set<ChatRoom> chatRooms) {
+//        this.chatRooms = chatRooms;
+//    }
+
+    public Set<ChatMessage> getChatMessages() {
+        return chatMessages;
+    }
+
+    public void setChatMessages(Set<ChatMessage> chatMessages) {
+        this.chatMessages = chatMessages;
     }
 }

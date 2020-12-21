@@ -91,28 +91,44 @@ public class TopicSubscriptionInterceptor implements ChannelInterceptor {
             try {
                 User user = authenticateToken(token);
 
-                // succefully authenticated user
-                // now check if we are allowed to subscribe to room
-                if (StompCommand.SUBSCRIBE.equals(headerAccessor.getCommand())) {
-                    if(headerAccessor.containsNativeHeader("room")) {
-                        Long roomId = Long.parseLong(headerAccessor.getNativeHeader("room").get(0));
-                        ChatRoom chatRoom = chatRoomRepository.findById(roomId).get();
-
-                        if(chatRoom.isPrivate() && !chatRoom.getUsers().contains(user)) {
-                            // User doesn't have access to chatroom
-                            throw new IllegalArgumentException("No permission in this chat room");
+                switch (headerAccessor.getCommand()) {
+                    case SUBSCRIBE: {
+                        long roomId = (headerAccessor.containsNativeHeader("room")) ? Long.parseLong(headerAccessor.getNativeHeader("room").get(0)) : -1;
+                        if(!verifyRoomSubscription(roomId, user)) {
+                            throw new IllegalArgumentException("No permission to subscribe to chatroom");
                         }
+                        break;
+                    }
+                    case SEND: {
+                        long roomId = (headerAccessor.containsNativeHeader("room")) ? Long.parseLong(headerAccessor.getNativeHeader("room").get(0)) : -1;
+                        if(!verifyRoomSubscription(roomId, user)) {
+                            throw new IllegalArgumentException("No permission to send to chatroom");
+                        }
+                        break;
                     }
                 }
             } catch (ServletException e) {
-                System.out.println(e);
+                throw new IllegalArgumentException("Unauthorized token");
             }
         } else {
+
+            // TODO (rhoe) better exception handling when there is no token?
             // User jwt token not accepted
             throw new IllegalArgumentException("Invalid token");
         }
 
         return message;
+    }
+
+    private boolean verifyRoomSubscription(long roomId, User user) {
+        ChatRoom chatRoom = chatRoomRepository.findById(roomId).get();
+        if(chatRoom == null)
+            return false;
+        if (chatRoom.isPrivate() && !chatRoom.getUsers().contains(user)) {
+            // User doesn't have access to chatroom
+            return false;
+        }
+        return true;
     }
 
 }

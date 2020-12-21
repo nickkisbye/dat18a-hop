@@ -36,4 +36,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         UsernamePasswordAuthenticationFilter.class);
     }
 
+//    @Override
+//    protected void configure(HttpSecurity http) throws Exception {
+//        http.authorizeRequests().antMatchers("/**").permitAll();
+//    }
+//
+//    @Override
+//    public void configure(WebSecurity http) throws Exception {
+//        http
+//                .ignoring()
+//                .antMatchers("/h2-console/**");
+//    }
 }

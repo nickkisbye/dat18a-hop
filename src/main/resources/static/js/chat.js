@@ -17,43 +17,39 @@ var colors = [
     '#ffc107', '#ff85af', '#FF9800', '#39bbb0'
 ];
 
+var bearerToken = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBdXRoZW50aWNhdGlvbiB0b2tlbiIsInVzciI6IlJhc211cyIsImlzcyI6InNwcmluZ2Jvb3Qtand0dG9rZW4iLCJpYXQiOiIyMDIwLTEyLTIxIDEyOjA0OjA5Iiwicm9sIjoiQWRtaW4ifQ.PAPvbFDrlmjRxntHAaqv-vuKNhPQ87P2yYobTpipJcAwcEAIdkwj8_DbwXNmCXJb8mK34wyil4T95TiD2EsIdw";
+var roomId = 1;
+
 function connect(event) {
     username = document.querySelector('#name').value.trim();
     room = document.querySelector('#room').value.trim();
-
     if (username && room) {
+
         usernamePage.classList.add('hidden');
         chatPage.classList.remove('hidden');
-
         var socket = new SockJS('/ws');
-        stompClient = Stomp.over(socket);
 
-        stompClient.connect({}, onConnected, onError);
+        stompClient = Stomp.over(socket);
+        stompClient.connect({Bearer:bearerToken, room:roomId}, onConnected, onError);
+
     }
     event.preventDefault();
 }
 
 function onConnected() {
-    let subHeader = {
-        Bearer: "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBdXRoZW50aWNhdGlvbiB0b2tlbiIsInVzciI6IlJhc211cyIsImlzcyI6ImR1Y2F0LXNwcmluZ2Jvb3Qtand0dG9rZW4iLCJpYXQiOiIyMDIwLTEyLTE5IDE3OjUxOjMwIiwicm9sIjoiQWRtaW5pc3RyYXRvciwgRGV2ZWxvcGVyIn0.C06nkHYj0aZMUAWUOBFGzQuoHCA8QbwAP5EG2WroZGxly_h3rXGK2vQkATxLQewm9qk1ERVXs92ffzbrox1kNw",
-        room: 1
-    }
-    // Subscribe to the Public Topic
-    stompClient.subscribe('/topic/public', onMessageReceived, {
-        Bearer: "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBdXRoZW50aWNhdGlvbiB0b2tlbiIsInVzciI6IlJhc211cyIsImlzcyI6ImR1Y2F0LXNwcmluZ2Jvb3Qtand0dG9rZW4iLCJpYXQiOiIyMDIwLTEyLTE5IDE3OjUxOjMwIiwicm9sIjoiQWRtaW5pc3RyYXRvciwgRGV2ZWxvcGVyIn0.C06nkHYj0aZMUAWUOBFGzQuoHCA8QbwAP5EG2WroZGxly_h3rXGK2vQkATxLQewm9qk1ERVXs92ffzbrox1kNw",
-        room: 1
-    });
-    stompClient.subscribe('/topic/' + room, onMessageReceived, {
-        Bearer: "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBdXRoZW50aWNhdGlvbiB0b2tlbiIsInVzciI6IlJhc211cyIsImlzcyI6ImR1Y2F0LXNwcmluZ2Jvb3Qtand0dG9rZW4iLCJpYXQiOiIyMDIwLTEyLTE5IDE3OjUxOjMwIiwicm9sIjoiQWRtaW5pc3RyYXRvciwgRGV2ZWxvcGVyIn0.C06nkHYj0aZMUAWUOBFGzQuoHCA8QbwAP5EG2WroZGxly_h3rXGK2vQkATxLQewm9qk1ERVXs92ffzbrox1kNw",
-        room: 1
-    });
+// let subHeader = {
+    //     Bearer: "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBdXRoZW50aWNhdGlvbiB0b2tlbiIsInVzciI6IlJhc211cyIsImlzcyI6ImR1Y2F0LXNwcmluZ2Jvb3Qtand0dG9rZW4iLCJpYXQiOiIyMDIwLTEyLTE5IDE3OjUxOjMwIiwicm9sIjoiQWRtaW5pc3RyYXRvciwgRGV2ZWxvcGVyIn0.C06nkHYj0aZMUAWUOBFGzQuoHCA8QbwAP5EG2WroZGxly_h3rXGK2vQkATxLQewm9qk1ERVXs92ffzbrox1kNw",
+    //     room: 1
     // stompClient.subscribe('/topic/public', onMessageReceived);
+    // }
+    stompClient.subscribe('/topic/public', onMessageReceived, {Bearer:bearerToken, room:roomId});
+    stompClient.subscribe('/topic/' + room, onMessageReceived, {Bearer: bearerToken, room: roomId});
     // stompClient.subscribe('/topic/' + room, onMessageReceived);
+    // Subscribe to the Public Topic
 
 
     // Tell your username to the server
-    stompClient.send("/app/chat.addUser",
-        {},
+    stompClient.send("/app/chat.addUser", {Bearer:bearerToken, room:roomId},
         JSON.stringify({sender: username, type: 'JOIN'})
     )
 
@@ -73,7 +69,7 @@ function sendMessage(event) {
             content: messageInput.value,
             type: 'CHAT'
         };
-        stompClient.send("/app/chat.sendMessage/" + room, {}, JSON.stringify(chatMessage));
+        stompClient.send("/app/chat.sendMessage/" + room, {Bearer:bearerToken, room:roomId}, JSON.stringify(chatMessage));
         messageInput.value = '';
     }
     event.preventDefault();

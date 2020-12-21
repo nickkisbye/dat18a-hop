@@ -79,6 +79,7 @@ public class TopicSubscriptionInterceptor implements ChannelInterceptor {
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(message);
         System.out.println(headerAccessor.getCommand());
+        System.out.println(headerAccessor.getMessageHeaders());
 
         String token = null;
         if (headerAccessor.containsNativeHeader("Bearer")) {
@@ -87,23 +88,18 @@ public class TopicSubscriptionInterceptor implements ChannelInterceptor {
         }
 
         if (token != null) {
-            userRepository.count();
             try {
                 User user = authenticateToken(token);
-                System.out.println(user.getUsername());
+
                 // succefully authenticated user
                 // now check if we are allowed to subscribe to room
                 if (StompCommand.SUBSCRIBE.equals(headerAccessor.getCommand())) {
                     if(headerAccessor.containsNativeHeader("room")) {
                         Long roomId = Long.parseLong(headerAccessor.getNativeHeader("room").get(0));
-
                         ChatRoom chatRoom = chatRoomRepository.findById(roomId).get();
-                        System.out.println(headerAccessor.getDestination());
-                        System.out.println(chatRoom.getName());
-                        if(!chatRoom.isPrivate() || chatRoom.getUsers().contains(user)) {
-                            System.out.println("hej");
-                        }
-                        else {
+
+                        if(chatRoom.isPrivate() && !chatRoom.getUsers().contains(user)) {
+                            // User doesn't have access to chatroom
                             throw new IllegalArgumentException("No permission in this chat room");
                         }
                     }
@@ -112,7 +108,8 @@ public class TopicSubscriptionInterceptor implements ChannelInterceptor {
                 System.out.println(e);
             }
         } else {
-            // no token available
+            // User jwt token not accepted
+            throw new IllegalArgumentException("Invalid token");
         }
 
         return message;

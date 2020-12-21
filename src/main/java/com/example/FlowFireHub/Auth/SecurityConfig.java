@@ -20,31 +20,31 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new JwtAuthFilter();
     }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http
-                .authorizeRequests()
-                .antMatchers("/token")
-                .permitAll()
-                .and().authorizeRequests().antMatchers("/admin/*").hasAuthority("Administrator")
-                .and().authorizeRequests().antMatchers("/users/*").hasAuthority("Bruger")
-                .anyRequest()
-                .authenticated()
-                .and()
-                .csrf().disable()
-                .addFilterBefore(jwtAuthenticationFilter(),
-                        UsernamePasswordAuthenticationFilter.class);
-    }
-
 //    @Override
 //    protected void configure(HttpSecurity http) throws Exception {
-//        http.authorizeRequests().antMatchers("/**").permitAll();
-//    }
-//
-//    @Override
-//    public void configure(WebSecurity http) throws Exception {
 //        http
-//                .ignoring()
-//                .antMatchers("/h2-console/**");
+//                .authorizeRequests()
+//                .antMatchers("/token")
+//                .permitAll()
+//                .and().authorizeRequests().antMatchers("/admin/*").hasAuthority("Administrator")
+//                .and().authorizeRequests().antMatchers("/users/*").hasAuthority("Bruger")
+//                .anyRequest()
+//                .authenticated()
+//                .and()
+//                .csrf().disable()
+//                .addFilterBefore(jwtAuthenticationFilter(),
+//                        UsernamePasswordAuthenticationFilter.class);
 //    }
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.authorizeRequests().antMatchers("/**").permitAll();
+    }
+
+    @Override
+    public void configure(WebSecurity http) throws Exception {
+        http
+                .ignoring()
+                .antMatchers("/h2-console/**");
+    }
 }

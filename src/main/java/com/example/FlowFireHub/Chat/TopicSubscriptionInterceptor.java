@@ -69,7 +69,7 @@ public class TopicSubscriptionInterceptor implements ChannelInterceptor {
             authority.add(new SimpleGrantedAuthority(role));
 
         AuthToken authenticationTkn = new AuthToken(user, null, authority);
-        result = userRepository.findByUsername(user);
+        result = userRepository.findByUsername(user).get();
         context.setAuthentication(authenticationTkn);
 
         return result;

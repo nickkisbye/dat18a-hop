@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -34,13 +35,14 @@ public class User {
 //    @JsonIgnoreProperties("friend")
     @ManyToOne()
     private Role role;
-//
-//    @JsonIgnore
-//    @ManyToMany
-//    private Set<ChatRoom> chatRooms;
 
     @JsonIgnore
-    @ManyToMany
+    @ManyToMany(mappedBy = "users")
+    private List<ChatRoom> chatRooms;
+
+    @JsonIgnore
+    @OneToMany
+    @JoinColumn(name="CHAT_MESSAGE")
     private Set<ChatMessage> chatMessages;
 
     public User() {
@@ -102,13 +104,13 @@ public class User {
         this.role = role;
     }
 
-//    public Set<ChatRoom> getChatRooms() {
-//        return chatRooms;
-//    }
-//
-//    public void setChatRooms(Set<ChatRoom> chatRooms) {
-//        this.chatRooms = chatRooms;
-//    }
+    public List<ChatRoom> getChatRooms() {
+        return chatRooms;
+    }
+
+    public void setChatRooms(List<ChatRoom> chatRooms) {
+        this.chatRooms = chatRooms;
+    }
 
     public Set<ChatMessage> getChatMessages() {
         return chatMessages;

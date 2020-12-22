@@ -77,12 +77,10 @@ public class TopicSubscriptionInterceptor implements ChannelInterceptor {
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(message);
-        System.out.println(headerAccessor.getCommand());
 
         String token = null;
         if (headerAccessor.containsNativeHeader("Bearer")) {
             token = headerAccessor.getNativeHeader("Bearer").get(0);
-            System.out.println(token);
         }
 
         if (token != null) {

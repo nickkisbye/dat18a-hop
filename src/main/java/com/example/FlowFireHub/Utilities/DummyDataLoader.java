@@ -37,20 +37,19 @@ public class DummyDataLoader implements CommandLineRunner {
         role.setName("Administrator");
         roleRepository.save(role);
 
+        {
+            User user = new User();
+            user.setUsername("Rasmus");
+            user.setRole(role);
 
-        User user = new User();
-        user.setUsername("Rasmus");
-        user.setRole(role);
+            FireFlow fireFlow = new FireFlow();
+            fireFlow.setPassword("$2a$10$Wpn3AIuaRU4/975BYY8pLepwwV9phOah65k6uh3Kk2rAJn3ghq4Li");
+            fireFlow.setUsername("Rasmus");
+            fireFlow.setUser(user);
+            fireFlowRepository.save(fireFlow);
+        }
 
-        FireFlow fireFlow = new FireFlow();
-        fireFlow.setPassword("$2a$10$Wpn3AIuaRU4/975BYY8pLepwwV9phOah65k6uh3Kk2rAJn3ghq4Li");
-        fireFlow.setUsername("Rasmus");
-        fireFlow.setUser(user);
-
-
-        fireFlowRepository.save(fireFlow);
-
-        ChatRoom room = new ChatRoom("public", false);
+        ChatRoom room = new ChatRoom("public", true);
         chatRoomRepository.save(room);
     }
 }

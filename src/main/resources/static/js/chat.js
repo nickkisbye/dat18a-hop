@@ -17,7 +17,7 @@ var colors = [
     '#ffc107', '#ff85af', '#FF9800', '#39bbb0'
 ];
 
-var bearerToken = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBdXRoZW50aWNhdGlvbiB0b2tlbiIsInVzciI6IlJhc211cyIsImlzcyI6InNwcmluZ2Jvb3Qtand0dG9rZW4iLCJpYXQiOiIyMDIwLTEyLTIxIDEyOjA0OjA5Iiwicm9sIjoiQWRtaW4ifQ.PAPvbFDrlmjRxntHAaqv-vuKNhPQ87P2yYobTpipJcAwcEAIdkwj8_DbwXNmCXJb8mK34wyil4T95TiD2EsIdw";
+var bearerToken = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBdXRoZW50aWNhdGlvbiB0b2tlbiIsInVzciI6IlJhc211cyIsImlzcyI6InNwcmluZ2Jvb3Qtand0dG9rZW4iLCJpYXQiOiIyMDIwLTEyLTIyIDEzOjIyOjI1Iiwicm9sIjoiQWRtaW5pc3RyYXRvciJ9.2Y147jHd3JC66opuyCxB9KIpLdq5GOWjagDP6IeA5jjB--td59Xft8KP683nxztCQmThioudHKnnpRuDGnhOIA";
 var roomId = 1;
 
 function connect(event) {
@@ -30,18 +30,24 @@ function connect(event) {
         var socket = new SockJS('/ws');
 
         stompClient = Stomp.over(socket);
-        stompClient.connect({Bearer:bearerToken, room:roomId}, onConnected, onError);
+        stompClient.connect({
+            Bearer: "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBdXRoZW50aWNhdGlvbiB0b2tlbiIsInVzciI6IlJhc211cyIsImlzcyI6InNwcmluZ2Jvb3Qtand0dG9rZW4iLCJpYXQiOiIyMDIwLTEyLTIyIDEzOjIyOjI1Iiwicm9sIjoiQWRtaW5pc3RyYXRvciJ9.2Y147jHd3JC66opuyCxB9KIpLdq5GOWjagDP6IeA5jjB--td59Xft8KP683nxztCQmThioudHKnnpRuDGnhOIA",
+            room: 1
+        }, onConnected, onError);
 
     }
     event.preventDefault();
 }
 
 function onConnected() {
-    stompClient.subscribe('/topic/public', onMessageReceived, {Bearer:bearerToken, room:roomId});
+    stompClient.subscribe('/topic/public', onMessageReceived, {Bearer: bearerToken, room: roomId});
     stompClient.subscribe('/topic/' + room, onMessageReceived, {Bearer: bearerToken, room: roomId});
 
     // Tell your username to the server
-    stompClient.send("/app/chat.addUser", {Bearer:bearerToken, room:roomId},
+    stompClient.send("/app/chat.addUser", {
+            Bearer: "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBdXRoZW50aWNhdGlvbiB0b2tlbiIsInVzciI6IlJhc211cyIsImlzcyI6InNwcmluZ2Jvb3Qtand0dG9rZW4iLCJpYXQiOiIyMDIwLTEyLTIyIDEzOjIyOjI1Iiwicm9sIjoiQWRtaW5pc3RyYXRvciJ9.2Y147jHd3JC66opuyCxB9KIpLdq5GOWjagDP6IeA5jjB--td59Xft8KP683nxztCQmThioudHKnnpRuDGnhOIA",
+            room: 1
+        },
         JSON.stringify({sender: username, type: 'JOIN'})
     )
 
@@ -61,7 +67,10 @@ function sendMessage(event) {
             content: messageInput.value,
             type: 'CHAT'
         };
-        stompClient.send("/app/chat.sendMessage/" + room, {Bearer:bearerToken, room:roomId}, JSON.stringify(chatMessage));
+        stompClient.send("/app/chat.sendMessage/" + room, {
+            Bearer: bearerToken,
+            room: roomId
+        }, JSON.stringify(chatMessage));
         messageInput.value = '';
     }
     event.preventDefault();

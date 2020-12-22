@@ -56,7 +56,6 @@ public class TopicSubscriptionInterceptor implements ChannelInterceptor {
         TopicSubscriptionInterceptor.chatMessageRepository = chatMessageRepository;
     }
 
-
     public User authenticateToken(String token) throws ServletException {
         User result = null;
 
@@ -79,7 +78,6 @@ public class TopicSubscriptionInterceptor implements ChannelInterceptor {
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(message);
         System.out.println(headerAccessor.getCommand());
-        System.out.println(headerAccessor.getMessageHeaders());
 
         String token = null;
         if (headerAccessor.containsNativeHeader("Bearer")) {
@@ -94,14 +92,14 @@ public class TopicSubscriptionInterceptor implements ChannelInterceptor {
                 switch (headerAccessor.getCommand()) {
                     case SUBSCRIBE: {
                         long roomId = (headerAccessor.containsNativeHeader("room")) ? Long.parseLong(headerAccessor.getNativeHeader("room").get(0)) : -1;
-                        if(!verifyRoomSubscription(roomId, user)) {
+                        if (!verifyRoomSubscription(roomId, user)) {
                             throw new IllegalArgumentException("No permission to subscribe to chatroom");
                         }
                         break;
                     }
                     case SEND: {
                         long roomId = (headerAccessor.containsNativeHeader("room")) ? Long.parseLong(headerAccessor.getNativeHeader("room").get(0)) : -1;
-                        if(!verifyRoomSubscription(roomId, user)) {
+                        if (!verifyRoomSubscription(roomId, user)) {
                             throw new IllegalArgumentException("No permission to send to chatroom");
                         }
                         break;
@@ -122,9 +120,9 @@ public class TopicSubscriptionInterceptor implements ChannelInterceptor {
 
     private boolean verifyRoomSubscription(long roomId, User user) {
         ChatRoom chatRoom = chatRoomRepository.findById(roomId).get();
-        if(chatRoom == null)
+        if (chatRoom == null)
             return false;
-        if (chatRoom.isPrivate() && !chatRoom.getUsers().contains(user)) {
+        if (chatRoom.isPrivate() && !chatRoom.hasUser(user)) {
             // User doesn't have access to chatroom
             return false;
         }

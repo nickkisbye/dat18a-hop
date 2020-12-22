@@ -3,6 +3,7 @@ package com.example.FlowFireHub.Domains;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -17,8 +18,12 @@ public class ChatRoom {
     private boolean isPrivate;
 
     @JsonIgnore
-    @ManyToMany
-    private Set<User> users;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "CHATROOM_SUBSCRIPTION",
+            joinColumns = @JoinColumn(name = "chatroom_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private List<User> users;
 
     public ChatRoom(String name, boolean isPrivate) {
         this.name = name;
@@ -44,15 +49,28 @@ public class ChatRoom {
         isPrivate = aPrivate;
     }
 
-    public Set<User> getUsers() {
+    public List<User> getUsers() {
         return users;
     }
 
-    public void setUsers(Set<User> users) {
+    public void setUsers(List<User> users) {
         this.users = users;
     }
 
-    public void AddUser(User user) {
+    public void addUser(User user) {
         this.users.add(user);
+    }
+
+    public void removeUser(User user) {
+        this.users.remove(user);
+    }
+
+    public boolean hasUser(User user) {
+        for (int i = 0; i < this.users.size(); i++) {
+            if (this.users.get(i).getId() == user.getId()) {
+                return true;
+            }
+        }
+        return false;
     }
 }

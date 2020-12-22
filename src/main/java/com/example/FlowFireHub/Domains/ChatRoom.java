@@ -25,6 +25,9 @@ public class ChatRoom {
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     private List<User> users;
 
+    @OneToMany(mappedBy = "chatRoom")
+    private List<ChatMessage> chatMessage;
+
     public ChatRoom(String name, boolean isPrivate) {
         this.name = name;
         this.isPrivate = isPrivate;

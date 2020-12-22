@@ -3,6 +3,7 @@ package com.example.FlowFireHub.Controllers;
 import com.example.FlowFireHub.Auth.JwtAuthFilter;
 import com.example.FlowFireHub.Domains.ChatMessage;
 import com.example.FlowFireHub.Respositories.ChatMessageRepository;
+import com.example.FlowFireHub.Respositories.ChatRoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -14,11 +15,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDateTime;
+
 @Controller
 public class ChatController {
 
     @Autowired
     private ChatMessageRepository chatMessageRepository;
+
+    @Autowired
+    private ChatRoomRepository chatRoomRepository;
 
     @Autowired
     private JwtAuthFilter jwtAuthFilter;
@@ -43,6 +49,9 @@ public class ChatController {
     @SendTo("/topic/{room}")
     public ChatMessage sendToRoom(@Payload ChatMessage chatMessage, SimpMessageHeaderAccessor headerAccessor)
     {
+        long roomId = headerAccessor.containsNativeHeader("room") ? Long.parseLong(headerAccessor.getNativeHeader("room").get(0)) : -1;
+        chatMessage.setChatRoom(chatRoomRepository.getOne(roomId));
+        chatMessage.setTimeStamp(LocalDateTime.now());
         chatMessageRepository.save(chatMessage);
         return chatMessage;
     }

@@ -2,14 +2,12 @@ package com.example.FlowFireHub.Controllers;
 
 import com.example.FlowFireHub.Domains.ChatRoom;
 import com.example.FlowFireHub.Domains.User;
-import com.example.FlowFireHub.Respositories.ChatRoomRepository;
-import com.example.FlowFireHub.Respositories.UserRepository;
+import com.example.FlowFireHub.Repositories.ChatRoomRepository;
+import com.example.FlowFireHub.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Iterator;
 
 @RestController
 @RequestMapping(value = "/chatroom", path = "/chatroom")

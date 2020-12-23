@@ -8,7 +8,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "fireflow")
-public class FireFlow {
+public class FlowFire {
 
     @Id
     @Column(name = "id")
@@ -16,6 +16,7 @@ public class FireFlow {
     private long id;
 
     private String username;
+
     private String password;
 
     @JsonIgnore
@@ -24,10 +25,10 @@ public class FireFlow {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public FireFlow() {
+    public FlowFire() {
     }
 
-    public FireFlow(String username, String password, User user) {
+    public FlowFire(String username, String password, User user) {
         this.username = username;
         this.password = password;
         this.user = user;

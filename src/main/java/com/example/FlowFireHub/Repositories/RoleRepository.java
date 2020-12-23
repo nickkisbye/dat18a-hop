@@ -1,4 +1,4 @@
-package com.example.FlowFireHub.Respositories;
+package com.example.FlowFireHub.Repositories;
 
 import com.example.FlowFireHub.Domains.Role;
 

@@ -19,19 +19,17 @@ public class User {
 
     private String username;
 
-    @JsonIgnore
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Steam steam;
 
-    @JsonIgnore
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private FireFlow fireFlow;
+    private FlowFire fireFlow;
 
     @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Friend> friend = new HashSet<>();
 
-    @JsonIgnore
+//    @JsonIgnore
 //    @JsonIgnoreProperties("friend")
     @ManyToOne()
     private Role role;
@@ -80,11 +78,11 @@ public class User {
         this.steam = steam;
     }
 
-    public FireFlow getFireFlow() {
+    public FlowFire getFireFlow() {
         return fireFlow;
     }
 
-    public void setFireFlow(FireFlow fireFlow) {
+    public void setFireFlow(FlowFire fireFlow) {
         this.fireFlow = fireFlow;
     }
 

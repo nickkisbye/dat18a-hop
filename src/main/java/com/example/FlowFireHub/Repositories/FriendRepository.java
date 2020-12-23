@@ -1,4 +1,4 @@
-package com.example.FlowFireHub.Respositories;
+package com.example.FlowFireHub.Repositories;
 
 import com.example.FlowFireHub.Domains.Friend;
 import com.example.FlowFireHub.Utilities.UserType;

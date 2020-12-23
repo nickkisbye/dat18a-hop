@@ -3,8 +3,8 @@ package com.example.FlowFireHub.Controllers;
 import com.example.FlowFireHub.Domains.Role;
 import com.example.FlowFireHub.Domains.Steam;
 import com.example.FlowFireHub.Domains.User;
-import com.example.FlowFireHub.Respositories.RoleRepository;
-import com.example.FlowFireHub.Respositories.SteamRepository;
+import com.example.FlowFireHub.Repositories.RoleRepository;
+import com.example.FlowFireHub.Repositories.SteamRepository;
 import com.example.FlowFireHub.Utilities.SteamManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -52,32 +52,24 @@ public class SteamController {
         }
     }
 
-    @PostMapping("/addUser")
-    public ResponseEntity<Steam> addSteamUser(@RequestBody Steam steam) {
-        Optional<Steam> addSteamUser = steamRepository.findByUsernameOrSteamId(steam.getUsername(), steam.getSteamid());
+    @GetMapping("/steamLogin")
+    public ResponseEntity<Steam> steamLogin(HttpServletRequest request) {
+        String steam_openid = request.getParameter("openid.identity");
+        String steamData = steamManager.getSteamData(steam_openid);
+        String steamid = steamManager.getKey(steamData, "steamid");
+        String username = steamManager.getKey(steamData, "personaname");
+        Optional<Steam> addSteamUser = steamRepository.findByUsernameOrSteamId(username, steamid);
         if(!addSteamUser.isPresent()) {
-            String steamData = steamManager.getSteamData(steam.getSteamid());
-            String steamid = steamManager.getKey(steamData, "steamid");
-            String username = steamManager.getKey(steamData, "personaname");
-            steam.setUsername(username);
-            steam.setSteamid(steamid);
+            Steam steamuser = new Steam();
+            steamuser.setUsername(username);
+            steamuser.setSteamid(steamid);
             Role role = roleRepository.findByName("Admin");
-            steam.setUser(new User(username, role));
-            return new ResponseEntity<Steam>(steamRepository.save(steam), HttpStatus.OK);
+            steamuser.setUser(new User(username, role));
+            return new ResponseEntity<Steam>(steamRepository.save(steamuser), HttpStatus.OK);
         } else {
+            Steam steam = addSteamUser.get();
             return new ResponseEntity<Steam>(steam, HttpStatus.NOT_ACCEPTABLE);
         }
-    }
-
-    @GetMapping("/OpenId")
-    public String getURLValue(HttpServletRequest request){
-        String test = request.getQueryString();
-        String test2 = request.getParameter("openid.identity");
-        String test3 = test2.substring(test2.lastIndexOf("/")+1);
-        System.out.println(test3);
-        System.out.println(test2);
-        System.out.println(test);
-        return "redirect:chat";
     }
 
 }

@@ -1,11 +1,11 @@
 package com.example.FlowFireHub.Controllers;
 
 import com.example.FlowFireHub.Auth.IValues;
-import com.example.FlowFireHub.Domains.FireFlow;
-import com.example.FlowFireHub.Respositories.FireFlowRepository;
-import com.example.FlowFireHub.Respositories.UserRepository;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import com.example.FlowFireHub.Domains.FlowFire;
+import com.example.FlowFireHub.Domains.User;
+import com.example.FlowFireHub.Repositories.FlowFireRepository;
+import com.example.FlowFireHub.Repositories.UserRepository;
+import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+@CrossOrigin
 @RestController
 public class AuthController {
 
@@ -30,17 +31,19 @@ public class AuthController {
     private UserRepository userRepository;
 
     @Autowired
-    private FireFlowRepository fireFlowRepository;
+    private FlowFireRepository flowFireRepository;
 
     @PostMapping("/token")
-    public ResponseEntity<String> getToken(@RequestBody FireFlow user) throws ServletException {
+    public ResponseEntity<String> getToken(@RequestBody FlowFire user) throws ServletException {
         String jwttoken = "";
+        Map<String, String> response = new HashMap();
 
         if (user.getUsername().isEmpty() || user.getPassword().isEmpty())
             return new ResponseEntity<String>("Username or password cannot be empty.", HttpStatus.BAD_REQUEST);
 
-        Optional<FireFlow> checkForUser = fireFlowRepository.findByUsername(user.getUsername());
-        String role = userRepository.findByUsername(user.getUsername()).get().getRole().getName();
+        Optional<FlowFire> checkForUser = flowFireRepository.findByUsername(user.getUsername());
+        User userObject = userRepository.findByUsername(user.getUsername()).get();
+        String role = userObject.getRole().getName();
 
         if (!checkForUser.isPresent())
             return new ResponseEntity<String>("Invalid username.", HttpStatus.UNAUTHORIZED);
@@ -55,13 +58,33 @@ public class AuthController {
                 claims.put("iat", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
                 jwttoken = Jwts.builder().setClaims(claims).signWith(SignatureAlgorithm.HS512, IValues.SECRET_KEY).compact();
+
+
+                response.put("token", jwttoken);
+                response.put("username", userObject.getUsername());
+                response.put("id", userObject.getId().toString());
+
                 System.out.println("Returning token: " + jwttoken);
             } else {
                 return new ResponseEntity<String>("Invalid password.", HttpStatus.UNAUTHORIZED);
             }
         }
 
-        return new ResponseEntity<String>(jwttoken, HttpStatus.OK);
+        return new ResponseEntity(response, HttpStatus.OK);
+    }
+
+
+    @PostMapping("/me/{token}")
+    public ResponseEntity<User> getLoggedInUser(@PathVariable("token") String token) {
+        try {
+            Jws<Claims> claims = Jwts.parser().requireIssuer(IValues.ISSUER).setSigningKey(IValues.SECRET_KEY).parseClaimsJws(token);
+            String username = (String) claims.getBody().get("usr");
+            User user = userRepository.findByUsername(username).get();
+            user.setRole(user.getRole());
+            return new ResponseEntity<User>(user, HttpStatus.OK);
+        } catch (SignatureException e) {
+            return new ResponseEntity(null, HttpStatus.OK);
+        }
     }
 
     @Bean

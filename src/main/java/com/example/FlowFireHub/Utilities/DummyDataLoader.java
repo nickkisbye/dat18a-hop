@@ -1,17 +1,15 @@
 package com.example.FlowFireHub.Utilities;
 
 import com.example.FlowFireHub.Domains.ChatRoom;
-import com.example.FlowFireHub.Domains.FireFlow;
+import com.example.FlowFireHub.Domains.FlowFire;
 import com.example.FlowFireHub.Domains.Role;
 import com.example.FlowFireHub.Domains.User;
-import com.example.FlowFireHub.Respositories.ChatRoomRepository;
-import com.example.FlowFireHub.Respositories.FireFlowRepository;
-import com.example.FlowFireHub.Respositories.RoleRepository;
-import com.example.FlowFireHub.Respositories.UserRepository;
+import com.example.FlowFireHub.Repositories.ChatRoomRepository;
+import com.example.FlowFireHub.Repositories.FlowFireRepository;
+import com.example.FlowFireHub.Repositories.RoleRepository;
+import com.example.FlowFireHub.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 //@Profile({"dev", "test"})
@@ -22,7 +20,7 @@ public class DummyDataLoader implements CommandLineRunner {
     UserRepository userRepository;
 
     @Autowired
-    FireFlowRepository fireFlowRepository;
+    FlowFireRepository flowFireRepository;
 
     @Autowired
     ChatRoomRepository chatRoomRepository;
@@ -42,11 +40,11 @@ public class DummyDataLoader implements CommandLineRunner {
             user.setUsername("Rasmus");
             user.setRole(role);
 
-            FireFlow fireFlow = new FireFlow();
+            FlowFire fireFlow = new FlowFire();
             fireFlow.setPassword("$2a$10$Wpn3AIuaRU4/975BYY8pLepwwV9phOah65k6uh3Kk2rAJn3ghq4Li");
             fireFlow.setUsername("Rasmus");
             fireFlow.setUser(user);
-            fireFlowRepository.save(fireFlow);
+            flowFireRepository.save(fireFlow);
         }
 
         ChatRoom room = new ChatRoom("public", true);

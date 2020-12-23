@@ -10,9 +10,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.example.FlowFireHub.Domains.User;
-import com.example.FlowFireHub.Respositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.FlowFireHub.Domains.AuthToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

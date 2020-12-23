@@ -1,20 +1,24 @@
-package com.example.FlowFireHub.Respositories;
+package com.example.FlowFireHub.Repositories;
 
-import com.example.FlowFireHub.Domains.FireFlow;
+import com.example.FlowFireHub.Domains.Steam;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
 
 import javax.transaction.Transactional;
 import java.util.Optional;
 
-public interface FireFlowRepository extends JpaRepository<FireFlow, Long> {
+@Repository
+public interface SteamRepository extends JpaRepository<Steam, Long> {
 
-    @Query("select f from FireFlow f where f.username=:username")
-    Optional<FireFlow> findByUsername(String username);
+    @Query("select s from Steam s where s.username=:username or s.steamid=:steamid")
+    Optional<Steam> findByUsernameOrSteamId(String username, String steamid);
 
     @Modifying
     @Transactional
     @Query(value = "DELETE from User where id = :id", nativeQuery = true)
     Integer deleteUserById(Long id);
+
 }

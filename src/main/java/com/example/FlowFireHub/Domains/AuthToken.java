@@ -1,4 +1,4 @@
-package com.example.FlowFireHub.Auth;
+package com.example.FlowFireHub.Domains;
 
 import java.util.Collection;
 

@@ -1,8 +1,8 @@
 package com.example.FlowFireHub.Controllers;
 
 import com.example.FlowFireHub.Domains.User;
-import com.example.FlowFireHub.Respositories.RoleRepository;
-import com.example.FlowFireHub.Respositories.UserRepository;
+import com.example.FlowFireHub.Repositories.RoleRepository;
+import com.example.FlowFireHub.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.Serializable;
 import java.util.Optional;
 
+@CrossOrigin
 @RestController
 @RequestMapping(value = "/users", path = "/users")
 public class UserController implements Serializable {

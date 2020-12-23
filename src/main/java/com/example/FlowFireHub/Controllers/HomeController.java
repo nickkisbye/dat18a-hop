@@ -1,11 +1,10 @@
 package com.example.FlowFireHub.Controllers;
 
-import com.example.FlowFireHub.Domains.ChatMessage;
-import com.example.FlowFireHub.Domains.FireFlow;
+import com.example.FlowFireHub.Domains.FlowFire;
 import com.example.FlowFireHub.Domains.User;
-import com.example.FlowFireHub.Respositories.ChatMessageRepository;
-import com.example.FlowFireHub.Respositories.FireFlowRepository;
-import com.example.FlowFireHub.Respositories.UserRepository;
+import com.example.FlowFireHub.Repositories.ChatMessageRepository;
+import com.example.FlowFireHub.Repositories.FlowFireRepository;
+import com.example.FlowFireHub.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +23,7 @@ public class HomeController {
     ChatMessageRepository chatMessageRepository;
 
     @Autowired
-    FireFlowRepository fireFlowRepository;
+    FlowFireRepository flowFireRepository;
 
 
     @GetMapping("/chat")
@@ -67,10 +66,10 @@ public class HomeController {
 ////
 //        userRepository.save(user);
 
-        FireFlow fireFlow = new FireFlow();
+        FlowFire fireFlow = new FlowFire();
         fireFlow.setPassword("$2a$10$uPvcrThCwgBdrfgJ.hGmEeIwMxmTNcViKb4oZ./t9HrADh//rsacS");
         fireFlow.setUser(user);
-        fireFlowRepository.save(fireFlow);
+        flowFireRepository.save(fireFlow);
 
         return new ResponseEntity<>(user, HttpStatus.OK);
     }

@@ -1,10 +1,10 @@
 package com.example.FlowFireHub.Controllers;
 
-import com.example.FlowFireHub.Domains.FireFlow;
+import com.example.FlowFireHub.Domains.FlowFire;
 import com.example.FlowFireHub.Domains.Role;
 import com.example.FlowFireHub.Domains.User;
-import com.example.FlowFireHub.Respositories.FireFlowRepository;
-import com.example.FlowFireHub.Respositories.RoleRepository;
+import com.example.FlowFireHub.Repositories.FlowFireRepository;
+import com.example.FlowFireHub.Repositories.RoleRepository;
 import com.example.FlowFireHub.Utilities.SteamManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(value = "/fireflow", path = "/fireflow")
+@RequestMapping(value = "/flowfire", path = "/flowfire")
 public class FlowFireController {
 
     @Autowired
-    FireFlowRepository fireFlowRepository;
+    FlowFireRepository flowFireRepository;
     private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
     @Autowired
     SteamManager steamManager;
@@ -28,14 +28,14 @@ public class FlowFireController {
 
 
     @GetMapping("/getAllUsers")
-    public Iterable<FireFlow> getAllUsers() {
-        Iterable<FireFlow> fireflow = fireFlowRepository.findAll();
+    public Iterable<FlowFire> getAllUsers() {
+        Iterable<FlowFire> fireflow = flowFireRepository.findAll();
         return fireflow;
     }
 
     @GetMapping("/getUser/{id}")
-    public Optional<FireFlow> getUserById(@PathVariable("id") Long id) {
-        Optional<FireFlow> fireFlow = fireFlowRepository.findById(id);
+    public Optional<FlowFire> getUserById(@PathVariable("id") Long id) {
+        Optional<FlowFire> fireFlow = flowFireRepository.findById(id);
         if (fireFlow.isPresent()) {
             return fireFlow;
         } else {
@@ -44,9 +44,9 @@ public class FlowFireController {
     }
 
     @DeleteMapping("/deleteUser/{id}")
-    public ResponseEntity<FireFlow> deleteUser(@PathVariable("id") Long id) {
+    public ResponseEntity<FlowFire> deleteUser(@PathVariable("id") Long id) {
         try {
-            fireFlowRepository.deleteUserById(id);
+            flowFireRepository.deleteUserById(id);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e);
@@ -55,15 +55,15 @@ public class FlowFireController {
     }
 
     @PostMapping("/addUser")
-    public ResponseEntity<FireFlow> addUser(@RequestBody FireFlow fireFlow) {
-        Optional<FireFlow> userToAdd = fireFlowRepository.findByUsername(fireFlow.getUsername());
+    public ResponseEntity<FlowFire> addUser(@RequestBody FlowFire fireFlow) {
+        Optional<FlowFire> userToAdd = flowFireRepository.findByUsername(fireFlow.getUsername());
         if (!userToAdd.isPresent()) {
             Role role = roleRepository.findByName("Admin");
             fireFlow.setUser(new User(fireFlow.getUsername(), role));
             fireFlow.setPassword(bCryptPasswordEncoder.encode(fireFlow.getPassword()));
-            return new ResponseEntity<FireFlow>(fireFlowRepository.save(fireFlow), HttpStatus.OK);
+            return new ResponseEntity<FlowFire>(flowFireRepository.save(fireFlow), HttpStatus.OK);
         } else {
-            return new ResponseEntity<FireFlow>(fireFlow, HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity<FlowFire>(fireFlow, HttpStatus.NOT_ACCEPTABLE);
         }
     }
 

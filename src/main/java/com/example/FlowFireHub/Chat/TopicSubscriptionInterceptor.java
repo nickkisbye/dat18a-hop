@@ -1,34 +1,27 @@
 package com.example.FlowFireHub.Chat;
 
-import com.example.FlowFireHub.Auth.AuthToken;
+import com.example.FlowFireHub.Domains.AuthToken;
 import com.example.FlowFireHub.Auth.IValues;
-import com.example.FlowFireHub.Auth.JwtAuthFilter;
-import com.example.FlowFireHub.Domains.ChatMessage;
 import com.example.FlowFireHub.Domains.ChatRoom;
 import com.example.FlowFireHub.Domains.User;
-import com.example.FlowFireHub.Respositories.ChatMessageRepository;
-import com.example.FlowFireHub.Respositories.ChatRoomRepository;
-import com.example.FlowFireHub.Respositories.UserRepository;
+import com.example.FlowFireHub.Repositories.ChatMessageRepository;
+import com.example.FlowFireHub.Repositories.ChatRoomRepository;
+import com.example.FlowFireHub.Repositories.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
-import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletException;
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 

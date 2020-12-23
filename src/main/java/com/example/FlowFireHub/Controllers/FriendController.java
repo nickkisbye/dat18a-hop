@@ -2,19 +2,18 @@ package com.example.FlowFireHub.Controllers;
 
 import com.example.FlowFireHub.Domains.Friend;
 import com.example.FlowFireHub.Domains.User;
-import com.example.FlowFireHub.Respositories.FriendRepository;
-import com.example.FlowFireHub.Respositories.UserRepository;
+import com.example.FlowFireHub.Repositories.FriendRepository;
+import com.example.FlowFireHub.Repositories.UserRepository;
 import com.example.FlowFireHub.Utilities.UserType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
 
-
+@CrossOrigin
 @RestController
 @RequestMapping(value = "/friend", path = "/friend")
 public class FriendController {
@@ -67,10 +66,9 @@ public class FriendController {
         return users;
     }
 
-    @GetMapping("/getFriends")
-    public Iterable<UserType> getFriends(@RequestBody User user) {
-        System.out.println(user.getId());
-        Iterable<UserType> users = friendRepository.getFriends(user.getId());
+    @GetMapping("/getFriends/{id}")
+    public Iterable<UserType> getFriends(@PathVariable("id") Long id) {
+        Iterable<UserType> users = friendRepository.getFriends(id);
         return users;
     }
 

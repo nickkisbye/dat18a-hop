@@ -1,9 +1,9 @@
 package com.example.FlowFireHub.Services;
 
-import com.example.FlowFireHub.Auth.AuthToken;
+import com.example.FlowFireHub.Domains.AuthToken;
 import com.example.FlowFireHub.Auth.IValues;
 import com.example.FlowFireHub.Domains.User;
-import com.example.FlowFireHub.Respositories.UserRepository;
+import com.example.FlowFireHub.Repositories.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;

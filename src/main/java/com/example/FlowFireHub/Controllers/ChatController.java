@@ -2,7 +2,10 @@ package com.example.FlowFireHub.Controllers;
 
 import com.example.FlowFireHub.Auth.JwtAuthFilter;
 import com.example.FlowFireHub.Domains.ChatMessage;
+import com.example.FlowFireHub.Domains.User;
 import com.example.FlowFireHub.Respositories.ChatMessageRepository;
+import com.example.FlowFireHub.Respositories.ChatRoomRepository;
+import com.example.FlowFireHub.Services.JwtUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -14,6 +17,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.ServletException;
+import java.time.LocalDateTime;
+
 @Controller
 public class ChatController {
 
@@ -21,7 +27,10 @@ public class ChatController {
     private ChatMessageRepository chatMessageRepository;
 
     @Autowired
-    private JwtAuthFilter jwtAuthFilter;
+    private ChatRoomRepository chatRoomRepository;
+
+    @Autowired
+    private JwtUserDetailsService jwtUserDetailsService;
 
     @MessageMapping("/chat.sendMessage")
     @SendTo("/topic/public")
@@ -41,9 +50,17 @@ public class ChatController {
 
     @MessageMapping("/chat.sendMessage/{room}")
     @SendTo("/topic/{room}")
-    public ChatMessage sendToRoom(@Payload ChatMessage chatMessage, SimpMessageHeaderAccessor headerAccessor)
-    {
-        chatMessageRepository.save(chatMessage);
+    public ChatMessage sendToRoom(@Payload ChatMessage chatMessage, SimpMessageHeaderAccessor headerAccessor) {
+        long roomId = headerAccessor.containsNativeHeader("room") ? Long.parseLong(headerAccessor.getNativeHeader("room").get(0)) : -1;
+        chatMessage.setChatRoom(chatRoomRepository.getOne(roomId));
+        chatMessage.setTimeStamp(LocalDateTime.now());
+        try {
+            User user = jwtUserDetailsService.authenticateToken(headerAccessor.getFirstNativeHeader("Bearer"));
+            chatMessage.setUser(user);
+            chatMessageRepository.save(chatMessage);
+        } catch(ServletException e) {
+            System.out.println(e);
+        }
         return chatMessage;
     }
 

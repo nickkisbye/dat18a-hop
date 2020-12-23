@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Table(name = "CHAT_MESSAGE")
 public class ChatMessage {
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     private MessageType type;
@@ -23,11 +23,17 @@ public class ChatMessage {
     @ManyToOne
     private ChatRoom chatRoom;
 
+    @JsonIgnore
+    @ManyToOne
+    private User user;
+
     public enum MessageType {
         CHAT,
         JOIN,
         LEAVE;
+
     }
+
     public MessageType getType() {
         return type;
     }
@@ -66,5 +72,13 @@ public class ChatMessage {
 
     public void setTimeStamp(LocalDateTime timeStamp) {
         this.timeStamp = timeStamp;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

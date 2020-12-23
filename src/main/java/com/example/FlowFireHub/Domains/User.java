@@ -42,7 +42,7 @@ public class User {
 
     @JsonIgnore
     @OneToMany
-    @JoinColumn(name="CHAT_MESSAGE")
+    @JoinColumn(name="USER_ID")
     private Set<ChatMessage> chatMessages;
 
     public User() {

@@ -60,7 +60,7 @@ public class FlowFireController {
     public ResponseEntity<FlowFire> addUser(@RequestBody FlowFire flowFire) {
         Optional<FlowFire> userToAdd = flowFireRepository.findByUsername(flowFire.getUsername());
         if (!userToAdd.isPresent()) {
-            Role role = roleRepository.findByName("Admin");
+            Role role = roleRepository.findByName("Administrator");
             flowFire.setUser(new User(flowFire.getUsername(), role));
             flowFire.setPassword(bCryptPasswordEncoder.encode(flowFire.getPassword()));
             return new ResponseEntity<FlowFire>(flowFireRepository.save(flowFire), HttpStatus.OK);

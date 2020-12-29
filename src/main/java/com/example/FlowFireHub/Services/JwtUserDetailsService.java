@@ -19,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -43,19 +44,16 @@ public class JwtUserDetailsService {
 
     public User authenticateToken(String token) throws ServletException {
         User result = null;
-
-        SecurityContext context = SecurityContextHolder.getContext();
         Jws<Claims> claims = Jwts.parser().requireIssuer(IValues.ISSUER).setSigningKey(IValues.SECRET_KEY).parseClaimsJws(token);
         String user = (String) claims.getBody().get("usr");
         String roles = (String) claims.getBody().get("rol");
-        List<GrantedAuthority> authority = new ArrayList<GrantedAuthority>();
-        for (String role : roles.split(","))
-            authority.add(new SimpleGrantedAuthority(role));
-
-        AuthToken authenticationTkn = new AuthToken(user, null, authority);
         result = userRepository.findByUsername(user).get();
-        context.setAuthentication(authenticationTkn);
-
         return result;
+    }
+
+    public String splitToken(HttpServletRequest request) {
+        String authTokenHeader = request.getHeader("Authorization");
+        String token = authTokenHeader.substring(7);
+        return token;
     }
 }

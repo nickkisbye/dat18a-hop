@@ -26,27 +26,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class TopicSubscriptionInterceptor implements ChannelInterceptor {
+public class ChatInterceptor implements ChannelInterceptor {
 
     private static UserRepository userRepository;
 
     @Autowired
     public void setUserRepository(UserRepository userRepository) {
-        TopicSubscriptionInterceptor.userRepository = userRepository;
+        ChatInterceptor.userRepository = userRepository;
     }
 
     private static ChatRoomRepository chatRoomRepository;
 
     @Autowired
     public void setChatRoomRepository(ChatRoomRepository chatRoomRepository) {
-        TopicSubscriptionInterceptor.chatRoomRepository = chatRoomRepository;
+        ChatInterceptor.chatRoomRepository = chatRoomRepository;
     }
 
     private static ChatMessageRepository chatMessageRepository;
 
     @Autowired
     public void setChatMessageRepository(ChatMessageRepository chatMessageRepository) {
-        TopicSubscriptionInterceptor.chatMessageRepository = chatMessageRepository;
+        ChatInterceptor.chatMessageRepository = chatMessageRepository;
     }
 
     public User authenticateToken(String token) throws ServletException {

@@ -35,7 +35,7 @@ jobs:
       - persist_to_workspace:
           root: target
           paths:
-            - customer-portal.jar
+            - app.jar
             - version.txt
 
   deploy:

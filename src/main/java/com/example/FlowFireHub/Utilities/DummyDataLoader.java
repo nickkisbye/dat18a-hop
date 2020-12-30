@@ -9,6 +9,7 @@ import com.example.FlowFireHub.Repositories.FlowFireRepository;
 import com.example.FlowFireHub.Repositories.RoleRepository;
 import com.example.FlowFireHub.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -28,26 +29,42 @@ public class DummyDataLoader implements CommandLineRunner {
     @Autowired
     RoleRepository roleRepository;
 
+    @Value("${spring.datasource.driverClassName:NONE}")
+    String dbDriver;
+
     @Override
     public void run(String... args) throws Exception {
+        if (dbDriver.equals("org.h2.Driver")) {
+            Role role = new Role();
+            role.setName("Administrator");
+            roleRepository.save(role);
 
-        Role role = new Role();
-        role.setName("Administrator");
-        roleRepository.save(role);
+            {
+                User user = new User();
+                user.setUsername("Rasmus");
+                user.setRole(role);
 
-        {
-            User user = new User();
-            user.setUsername("Rasmus");
-            user.setRole(role);
+                FlowFire fireFlow = new FlowFire();
+                fireFlow.setPassword("$2a$10$Wpn3AIuaRU4/975BYY8pLepwwV9phOah65k6uh3Kk2rAJn3ghq4Li");
+                fireFlow.setUsername("Rasmus");
+                fireFlow.setUser(user);
+                flowFireRepository.save(fireFlow);
+            }
 
-            FlowFire fireFlow = new FlowFire();
-            fireFlow.setPassword("$2a$10$Wpn3AIuaRU4/975BYY8pLepwwV9phOah65k6uh3Kk2rAJn3ghq4Li");
-            fireFlow.setUsername("Rasmus");
-            fireFlow.setUser(user);
-            flowFireRepository.save(fireFlow);
+            {
+                User user = new User();
+                user.setUsername("Peter");
+                user.setRole(role);
+
+                FlowFire fireFlow = new FlowFire();
+                fireFlow.setPassword("$2a$10$Wpn3AIuaRU4/975BYY8pLepAJn3ghq4Li");
+                fireFlow.setUsername("Peter");
+                fireFlow.setUser(user);
+                flowFireRepository.save(fireFlow);
+            }
+
+            ChatRoom room = new ChatRoom("public", true);
+            chatRoomRepository.save(room);
         }
-
-        ChatRoom room = new ChatRoom("public", true);
-        chatRoomRepository.save(room);
     }
 }

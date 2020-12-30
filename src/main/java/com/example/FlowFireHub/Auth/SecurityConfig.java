@@ -44,10 +44,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //        http.authorizeRequests().antMatchers("/").permitAll().and().csrf().disable();
 //    }
 //
-//    @Override
-//    public void configure(WebSecurity http) throws Exception {
-//        http
-//                .ignoring()
-//                .antMatchers("/h2-console/**");
-//    }
+    @Override
+    public void configure(WebSecurity http) throws Exception {
+        http
+                .ignoring()
+                .antMatchers("/h2-console/**");
+    }
 }

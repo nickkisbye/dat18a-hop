@@ -29,7 +29,7 @@ public class DummyDataLoader implements CommandLineRunner {
     @Autowired
     RoleRepository roleRepository;
 
-    @Value("${spring.datasource.driverClassName}")
+    @Value("${spring.datasource.driverClassName:NONE}")
     String dbDriver;
 
     @Override

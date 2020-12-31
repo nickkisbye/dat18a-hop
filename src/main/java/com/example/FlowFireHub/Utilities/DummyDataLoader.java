@@ -62,7 +62,7 @@ public class DummyDataLoader implements CommandLineRunner {
                 flowFireRepository.save(fireFlow);
             }
 
-            ChatRoom room = new ChatRoom("public", true);
+            ChatRoom room = new ChatRoom("public", false);
             chatRoomRepository.save(room);
     }
 }

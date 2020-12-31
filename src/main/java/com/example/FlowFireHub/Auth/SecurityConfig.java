@@ -8,13 +8,10 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-// Spring boot security configuration class.
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    // The Jwt token authentication filter. This filter will intercept all the requests other than the “/token” uri.
-    // The class is created to fetch the authentication token from the request, parse and validate the jwt token for further processing.
     @Bean
     public JwtAuthFilter jwtAuthenticationFilter() {
         return new JwtAuthFilter();
@@ -22,15 +19,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
+        http.
+                cors().and()
                 .authorizeRequests()
                 .antMatchers("/token")
                 .permitAll()
-                .and().authorizeRequests().antMatchers("/me/**").permitAll() //access("hasAuthority('Administrator') or hasAuthority('Bruger')")
-                .and().authorizeRequests().antMatchers("/friend/**").permitAll()
-                .and().authorizeRequests().antMatchers("/flowfire/**" ).permitAll()
+                .and().authorizeRequests().antMatchers("/me").access("hasAuthority('Administrator') or hasAuthority('Bruger')")
+                .and().authorizeRequests().antMatchers("/friend/**").access("hasAuthority('Administrator') or hasAuthority('Bruger')")
+                .and().authorizeRequests().antMatchers("/flowfire/**" ).access("hasAuthority('Administrator') or hasAuthority('Bruger')")
                 .and().authorizeRequests().antMatchers("/admin/**").hasAuthority("Administrator")
-                .and().authorizeRequests().antMatchers("/users/**").permitAll()
+                .and().authorizeRequests().antMatchers("/users/**").access("hasAuthority('Administrator') or hasAuthority('Bruger')")
+                .and().authorizeRequests().antMatchers("/chatroom/**").access("hasAuthority('Administrator') or hasAuthority('Bruger')")
+                .and().authorizeRequests().antMatchers("/ws/**").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -38,16 +38,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(jwtAuthenticationFilter(),
                         UsernamePasswordAuthenticationFilter.class);
     }
-
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//        http.authorizeRequests().antMatchers("/").permitAll().and().csrf().disable();
-//    }
-//
-//    @Override
-//    public void configure(WebSecurity http) throws Exception {
-//        http
-//                .ignoring()
-//                .antMatchers("/h2-console/**");
-//    }
 }

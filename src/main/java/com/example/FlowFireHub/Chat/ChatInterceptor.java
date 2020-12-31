@@ -55,10 +55,9 @@ public class ChatInterceptor implements ChannelInterceptor {
         SecurityContext context = SecurityContextHolder.getContext();
         Jws<Claims> claims = Jwts.parser().requireIssuer(IValues.ISSUER).setSigningKey(IValues.SECRET_KEY).parseClaimsJws(token);
         String user = (String) claims.getBody().get("usr");
-        String roles = (String) claims.getBody().get("rol");
+        String role = (String) claims.getBody().get("rol");
         List<GrantedAuthority> authority = new ArrayList<GrantedAuthority>();
-        for (String role : roles.split(","))
-            authority.add(new SimpleGrantedAuthority(role));
+        authority.add(new SimpleGrantedAuthority(role));
 
         AuthToken authenticationTkn = new AuthToken(user, null, authority);
         result = userRepository.findByUsername(user).get();
@@ -70,7 +69,6 @@ public class ChatInterceptor implements ChannelInterceptor {
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(message);
-
         String token = null;
         if (headerAccessor.containsNativeHeader("Bearer")) {
             token = headerAccessor.getNativeHeader("Bearer").get(0);

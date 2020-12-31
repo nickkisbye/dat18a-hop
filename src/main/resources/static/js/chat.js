@@ -17,7 +17,7 @@ var colors = [
     '#ffc107', '#ff85af', '#FF9800', '#39bbb0'
 ];
 
-var bearerToken = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBdXRoZW50aWNhdGlvbiB0b2tlbiIsInVzciI6IlJhc211cyIsImlzcyI6InNwcmluZ2Jvb3Qtand0dG9rZW4iLCJpYXQiOiIyMDIwLTEyLTIyIDEzOjIyOjI1Iiwicm9sIjoiQWRtaW5pc3RyYXRvciJ9.2Y147jHd3JC66opuyCxB9KIpLdq5GOWjagDP6IeA5jjB--td59Xft8KP683nxztCQmThioudHKnnpRuDGnhOIA";
+var bearerToken = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBdXRoZW50aWNhdGlvbiB0b2tlbiIsInVzciI6IlJhc211cyIsImlzcyI6InNwcmluZ2Jvb3Qtand0dG9rZW4iLCJpYXQiOiIyMDIwLTEyLTMwIDE3OjM5OjMyIiwicm9sIjoiQWRtaW5pc3RyYXRvciJ9.ZdtHDyevz_mr08Hnqu1T3cWLq96hIa23yAPACDXH3WlrP0jZ640NvYgz2g0IAxDIGd-1VYM29s4l0C30VEXwvA";
 var roomId = 1;
 
 function connect(event) {

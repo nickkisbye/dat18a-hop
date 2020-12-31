@@ -34,7 +34,6 @@ public class DummyDataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        if (dbDriver.equals("org.h2.Driver")) {
             Role role = new Role();
             role.setName("Administrator");
             roleRepository.save(role);
@@ -65,6 +64,5 @@ public class DummyDataLoader implements CommandLineRunner {
 
             ChatRoom room = new ChatRoom("public", true);
             chatRoomRepository.save(room);
-        }
     }
 }

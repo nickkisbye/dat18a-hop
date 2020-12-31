@@ -2,11 +2,14 @@ package com.example.FlowFireHub.Controllers;
 
 import com.example.FlowFireHub.Auth.JwtAuthFilter;
 import com.example.FlowFireHub.Domains.ChatMessage;
+import com.example.FlowFireHub.Domains.ChatRoom;
 import com.example.FlowFireHub.Domains.User;
 import com.example.FlowFireHub.Repositories.ChatMessageRepository;
 import com.example.FlowFireHub.Repositories.ChatRoomRepository;
 import com.example.FlowFireHub.Services.JwtUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -15,10 +18,12 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.ServletException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Controller
 public class ChatController {

@@ -5,6 +5,7 @@ import com.example.FlowFireHub.Domains.FlowFire;
 import com.example.FlowFireHub.Domains.User;
 import com.example.FlowFireHub.Repositories.FlowFireRepository;
 import com.example.FlowFireHub.Repositories.UserRepository;
+import com.example.FlowFireHub.Services.JwtUserDetailsService;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -35,6 +37,7 @@ public class AuthController {
 
     @PostMapping("/token")
     public ResponseEntity<String> getToken(@RequestBody FlowFire user) throws ServletException {
+
         String jwttoken = "";
         Map<String, String> response = new HashMap();
 
@@ -66,7 +69,7 @@ public class AuthController {
 
                 System.out.println("Returning token: " + jwttoken);
             } else {
-                return new ResponseEntity<String>("Invalid password.", HttpStatus.UNAUTHORIZED);
+                return new ResponseEntity<String>("Invalid password.", HttpStatus.FORBIDDEN);
             }
         }
 
@@ -74,8 +77,9 @@ public class AuthController {
     }
 
 
-    @PostMapping("/me/{token}")
-    public ResponseEntity<User> getLoggedInUser(@PathVariable("token") String token) {
+    @PostMapping("/me")
+    public ResponseEntity<User> getLoggedInUser(@RequestHeader("Authorization") String bearer) {
+        String token = bearer.split(" ")[1];
         try {
             Jws<Claims> claims = Jwts.parser().requireIssuer(IValues.ISSUER).setSigningKey(IValues.SECRET_KEY).parseClaimsJws(token);
             String username = (String) claims.getBody().get("usr");

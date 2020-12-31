@@ -39,18 +39,17 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             if (authenticationHeader != null && authenticationHeader.startsWith("Bearer")) {
 
                 final String token = authenticationHeader.replaceAll(IValues.BEARER_TOKEN, "");
-                System.out.println("token: " + token);
 
                 try {
 
                     Jws<Claims> claims = Jwts.parser().requireIssuer(IValues.ISSUER).setSigningKey(IValues.SECRET_KEY).parseClaimsJws(token);
 
                     String user = (String) claims.getBody().get("usr");
-                    String roles = (String) claims.getBody().get("rol");
+                    String role = (String) claims.getBody().get("rol");
 
                     List<GrantedAuthority> authority= new ArrayList<GrantedAuthority>();
-                    for(String role: roles.split(","))
-                        authority.add(new SimpleGrantedAuthority(role));
+
+                    authority.add(new SimpleGrantedAuthority(role));
 
                     AuthToken authenticationTkn= new AuthToken(user, null, authority);
                     context.setAuthentication(authenticationTkn);

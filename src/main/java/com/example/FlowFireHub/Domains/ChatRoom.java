@@ -3,6 +3,7 @@ package com.example.FlowFireHub.Domains;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -31,9 +32,11 @@ public class ChatRoom {
     public ChatRoom(String name, boolean isPrivate) {
         this.name = name;
         this.isPrivate = isPrivate;
+        this.users = new ArrayList<>();
     }
 
     public ChatRoom() {
+        this.users = new ArrayList<>();
     }
 
     public long getId() {

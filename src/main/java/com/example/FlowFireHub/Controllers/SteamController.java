@@ -42,34 +42,4 @@ public class SteamController {
         }
     }
 
-    @DeleteMapping("/deleteUser/{id}")
-    public ResponseEntity<Steam> deleteUser(@PathVariable("id") Long id) {
-        try {
-            steamRepository.deleteUserById(id);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @GetMapping("/steamLogin")
-    public ResponseEntity<Steam> steamLogin(HttpServletRequest request) {
-        String steam_openid = request.getParameter("openid.identity");
-        String steamData = steamManager.getSteamData(steam_openid);
-        String steamid = steamManager.getKey(steamData, "steamid");
-        String username = steamManager.getKey(steamData, "personaname");
-        Optional<Steam> addSteamUser = steamRepository.findByUsernameOrSteamId(username, steamid);
-        if(!addSteamUser.isPresent()) {
-            Steam steamuser = new Steam();
-            steamuser.setUsername(username);
-            steamuser.setSteamid(steamid);
-            Role role = roleRepository.findByName("Admin");
-            steamuser.setUser(new User(username, role));
-            return new ResponseEntity<Steam>(steamRepository.save(steamuser), HttpStatus.OK);
-        } else {
-            Steam steam = addSteamUser.get();
-            return new ResponseEntity<Steam>(steam, HttpStatus.NOT_ACCEPTABLE);
-        }
-    }
-
 }

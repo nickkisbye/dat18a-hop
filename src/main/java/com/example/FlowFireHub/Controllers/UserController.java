@@ -39,28 +39,4 @@ public class UserController implements Serializable {
         }
     }
 
-    @DeleteMapping("/deleteUser/{id}")
-    public ResponseEntity<User> deleteUser(@PathVariable("id") Long id) {
-        System.out.println(id);
-        try {
-            userRepository.deleteUserById(id);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
-            System.out.println(e);
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }
-
-//    @PutMapping("/updateUser/{id}")
-//    public ResponseEntity<User> updateUser(@RequestBody User user, @PathVariable("id") Long id) {
-//        Optional<User> userToUpdate = userRepository.findById(id);
-//        if(userToUpdate.isPresent()) {
-//            User _user = userToUpdate.get();
-//            _user.setUsername(user.getUsername());
-//            _user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-//            return new ResponseEntity<>(userRepository.save(_user), HttpStatus.OK);
-//        } else {
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-//    }
 }

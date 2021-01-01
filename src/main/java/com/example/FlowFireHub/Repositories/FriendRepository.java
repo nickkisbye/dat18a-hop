@@ -22,11 +22,13 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
     @Query(value = "select U.username, U.id from user U where U.id in (select F.friend_id from friend F where F.user_id = :id and is_active = false)", nativeQuery = true)
     List<UserType> getPending(Long id);
 
-    @Query(value = "select username, id from user INNER JOIN friend on user.id = friend.friend_id where friend.user_id = :id and IS_ACTIVE = 'TRUE'\n" +
+    @Query(value = "select username, id from user INNER JOIN friend on user.id = friend.friend_id " +
+            "where friend.user_id = :id and IS_ACTIVE = 'TRUE'\n" +
             "union\n" +
             "select username, id\n" +
             "from user\n" +
-            "INNER JOIN friend on user.id = friend.user_id where friend.friend_id = :id and IS_ACTIVE = '1'", nativeQuery = true)
+            "INNER JOIN friend on user.id = friend.user_id where friend.friend_id = :id " +
+            "and IS_ACTIVE = '1'", nativeQuery = true)
     List<UserType> getFriends(Long id);
 
     @Modifying

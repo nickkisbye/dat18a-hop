@@ -20,13 +20,12 @@ public class FlowFireController {
 
     @Autowired
     FlowFireRepository flowFireRepository;
-
-    private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-
     @Autowired
     SteamManager steamManager;
     @Autowired
     RoleRepository roleRepository;
+
+    private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
 
     @GetMapping("/getAllUsers")
@@ -45,27 +44,16 @@ public class FlowFireController {
         }
     }
 
-    @DeleteMapping("/deleteUser/{id}")
-    public ResponseEntity<FlowFire> deleteUser(@PathVariable("id") Long id) {
-        try {
-            flowFireRepository.deleteUserById(id);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
-            System.out.println(e);
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @PostMapping("/addUser")
-    public ResponseEntity<FlowFire> addUser(@RequestBody FlowFire flowFire) {
-        Optional<FlowFire> userToAdd = flowFireRepository.findByUsername(flowFire.getUsername());
-        if (!userToAdd.isPresent()) {
-            Role role = roleRepository.findByName("Administrator");
-            flowFire.setUser(new User(flowFire.getUsername(), role));
-            flowFire.setPassword(bCryptPasswordEncoder.encode(flowFire.getPassword()));
-            return new ResponseEntity<FlowFire>(flowFireRepository.save(flowFire), HttpStatus.OK);
+    @PutMapping("/updateUser/{id}")
+    public ResponseEntity<FlowFire> updateUser(@RequestBody FlowFire flowfire, @PathVariable("id") Long id) {
+        Optional<FlowFire> userToUpdate = flowFireRepository.findById(id);
+        if(userToUpdate.isPresent()) {
+            FlowFire _user = userToUpdate.get();
+            _user.setUsername(flowfire.getUsername());
+            _user.setPassword(bCryptPasswordEncoder.encode(flowfire.getPassword()));
+            return new ResponseEntity<>(flowFireRepository.save(_user), HttpStatus.OK);
         } else {
-            return new ResponseEntity<FlowFire>(flowFire, HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 

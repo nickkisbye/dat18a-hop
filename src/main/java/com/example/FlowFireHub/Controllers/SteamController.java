@@ -18,11 +18,11 @@ import java.util.Optional;
 public class SteamController {
 
     @Autowired
-    SteamRepository steamRepository;
+    private SteamRepository steamRepository;
     @Autowired
-    SteamManager steamManager;
+    private SteamManager steamManager;
     @Autowired
-    RoleRepository roleRepository;
+    private RoleRepository roleRepository;
 
 
     @GetMapping("/getAllUsers")

@@ -23,11 +23,11 @@ public class FriendController {
 
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
     @Autowired
-    FriendRepository friendRepository;
+    private FriendRepository friendRepository;
     @Autowired
-    JwtUserDetailsService jwtUserDetailsService;
+    private JwtUserDetailsService jwtUserDetailsService;
 
     @PostMapping("/requestFriend/{id}")
     public ResponseEntity<User> requestFriend(HttpServletRequest request, @PathVariable("id") Long id) throws ServletException {

@@ -17,9 +17,9 @@ import java.util.Optional;
 public class UserController implements Serializable {
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
     @Autowired
-    RoleRepository roleRepository;
+    private RoleRepository roleRepository;
 
 
     @GetMapping("/getAllUsers")

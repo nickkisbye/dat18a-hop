@@ -28,6 +28,19 @@ public class FlowFireController {
     private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
 
+    @PostMapping("/addUser")
+    public ResponseEntity<FlowFire> addUser(@RequestBody FlowFire flowFire) {
+        Optional<FlowFire> userToAdd = flowFireRepository.findByUsername(flowFire.getUsername());
+        if (!userToAdd.isPresent()) {
+            Role role = roleRepository.findByName("Administrator");
+            flowFire.setUser(new User(flowFire.getUsername(), role));
+            flowFire.setPassword(bCryptPasswordEncoder.encode(flowFire.getPassword()));
+            return new ResponseEntity<FlowFire>(flowFireRepository.save(flowFire), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<FlowFire>(flowFire, HttpStatus.NOT_ACCEPTABLE);
+        }
+    }
+
     @GetMapping("/getAllUsers")
     public Iterable<FlowFire> getAllUsers() {
         Iterable<FlowFire> flowFire = flowFireRepository.findAll();

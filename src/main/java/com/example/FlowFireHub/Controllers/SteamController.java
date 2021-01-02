@@ -31,6 +31,26 @@ public class SteamController {
         return steam;
     }
 
+    @GetMapping("/steam/login")
+    public ResponseEntity<Steam> steamLogin(HttpServletRequest request) {
+        String steam_openid = request.getParameter("openid.identity");
+        String steamData = steamManager.getSteamData(steam_openid);
+        String steamid = steamManager.getKey(steamData, "steamid");
+        String username = steamManager.getKey(steamData, "personaname");
+        Optional<Steam> addSteamUser = steamRepository.findByUsernameOrSteamId(username, steamid);
+        if(!addSteamUser.isPresent()) {
+            Steam steamuser = new Steam();
+            steamuser.setUsername(username);
+            steamuser.setSteamid(steamid);
+            Role role = roleRepository.findByName("User");
+            steamuser.setUser(new User(username, role));
+            return new ResponseEntity<Steam>(steamRepository.save(steamuser), HttpStatus.OK);
+        } else {
+            Steam steam = addSteamUser.get();
+            return new ResponseEntity<Steam>(steam, HttpStatus.NOT_ACCEPTABLE);
+        }
+    }
+
     @GetMapping("/getUser/{id}")
     public ResponseEntity<Steam> getUserById(@PathVariable("id") Long id) {
         Optional<Steam> steamEntity =  steamRepository.findById(id);

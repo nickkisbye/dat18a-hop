@@ -96,9 +96,4 @@ public class AuthController {
         return new BCryptPasswordEncoder();
     }
 
-    @GetMapping("/createpassword")
-    public ResponseEntity<String> createPassword(@RequestParam String password) {
-        System.out.println(password);
-        return new ResponseEntity<>(bCryptPasswordEncoder.encode(password), HttpStatus.OK);
-    }
 }

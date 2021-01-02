@@ -7,7 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 
 public class AuthToken extends UsernamePasswordAuthenticationToken {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersion = 1L;
 
     public AuthToken(Object principal, Object credentials) {
         super(principal, credentials);

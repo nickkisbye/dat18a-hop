@@ -1,6 +1,6 @@
 package com.example.FlowFireHub.Auth;
 
-public interface IValues {
+public class IValues {
 
     public static final String BEARER_TOKEN= "Bearer ";
     public static final String HEADER= "authorization";

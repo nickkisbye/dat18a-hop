@@ -20,10 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class AdminController {
 
     private SteamRepository steamRepository;
-    @Autowired
-    private SteamManager steamManager;
-    @Autowired
-    private RoleRepository roleRepository;
+
     @Autowired
     private UserRepository userRepository;
     @Autowired

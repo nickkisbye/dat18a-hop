@@ -19,11 +19,11 @@ import java.util.Optional;
 public class FlowFireController {
 
     @Autowired
-    FlowFireRepository flowFireRepository;
+    private FlowFireRepository flowFireRepository;
     @Autowired
-    SteamManager steamManager;
+    private SteamManager steamManager;
     @Autowired
-    RoleRepository roleRepository;
+    private RoleRepository roleRepository;
 
     private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 

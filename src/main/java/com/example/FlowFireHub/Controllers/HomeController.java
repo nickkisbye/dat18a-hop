@@ -24,17 +24,17 @@ import java.util.Optional;
 public class HomeController {
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
     @Autowired
-    ChatMessageRepository chatMessageRepository;
+    private ChatMessageRepository chatMessageRepository;
     @Autowired
-    FlowFireRepository flowFireRepository;
+    private FlowFireRepository flowFireRepository;
     @Autowired
-    SteamRepository steamRepository;
+    private SteamRepository steamRepository;
     @Autowired
-    SteamManager steamManager;
+    private SteamManager steamManager;
     @Autowired
-    RoleRepository roleRepository;
+    private RoleRepository roleRepository;
 
     private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 

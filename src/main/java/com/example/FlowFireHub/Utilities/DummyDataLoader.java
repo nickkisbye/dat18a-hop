@@ -82,9 +82,5 @@ public class DummyDataLoader implements CommandLineRunner {
             chatRoomRepository.save(room);
         }
 
-        {
-            ChatRoom room = new ChatRoom("boomer", false);
-            chatRoomRepository.save(room);
-        }
     }
 }

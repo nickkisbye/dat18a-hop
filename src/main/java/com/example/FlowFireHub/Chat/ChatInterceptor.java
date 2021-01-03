@@ -80,14 +80,16 @@ public class ChatInterceptor implements ChannelInterceptor {
 
                 switch (headerAccessor.getCommand()) {
                     case SUBSCRIBE: {
-                        long roomId = (headerAccessor.containsNativeHeader("room")) ? Long.parseLong(headerAccessor.getNativeHeader("room").get(0)) : -1;
+                        long roomId = (headerAccessor.containsNativeHeader("room")) ?
+                                Long.parseLong(headerAccessor.getNativeHeader("room").get(0)) : -1;
                         if (!verifyRoomSubscription(roomId, user)) {
                             throw new IllegalArgumentException("No permission to subscribe to chatroom");
                         }
                         break;
                     }
                     case SEND: {
-                        long roomId = (headerAccessor.containsNativeHeader("room")) ? Long.parseLong(headerAccessor.getNativeHeader("room").get(0)) : -1;
+                        long roomId = (headerAccessor.containsNativeHeader("room")) ?
+                                Long.parseLong(headerAccessor.getNativeHeader("room").get(0)) : -1;
                         if (!verifyRoomSubscription(roomId, user)) {
                             throw new IllegalArgumentException("No permission to send to chatroom");
                         }

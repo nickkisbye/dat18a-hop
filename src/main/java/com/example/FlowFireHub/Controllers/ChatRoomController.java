@@ -89,4 +89,5 @@ public class ChatRoomController {
         List<ChatMessage> messages = chatMessageRepository.getMessageByRoomId(id);
         return new ResponseEntity(messages, HttpStatus.OK);
     }
+
 }

@@ -1,20 +1,18 @@
 package com.example.FlowFireHub.Controllers;
 
 
+import com.example.FlowFireHub.Domains.ChatRoom;
 import com.example.FlowFireHub.Domains.FlowFire;
 import com.example.FlowFireHub.Domains.Steam;
 import com.example.FlowFireHub.Domains.User;
-import com.example.FlowFireHub.Repositories.FlowFireRepository;
-import com.example.FlowFireHub.Repositories.RoleRepository;
-import com.example.FlowFireHub.Repositories.SteamRepository;
-import com.example.FlowFireHub.Repositories.UserRepository;
+import com.example.FlowFireHub.Repositories.*;
 import com.example.FlowFireHub.Utilities.SteamManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RequestMapping(value = "/admin", path = "/admin")
 public class AdminController {
@@ -25,7 +23,10 @@ public class AdminController {
     private UserRepository userRepository;
     @Autowired
     private FlowFireRepository flowFireRepository;
-
+    @Autowired
+    private ChatMessageRepository chatMessageRepository;
+    @Autowired
+    private ChatRoomRepository chatRoomRepository;
 
     @DeleteMapping("/steam/deleteUser/{id}")
     public ResponseEntity<Steam> deleteSteamUser(@PathVariable("id") Long id) {
@@ -58,6 +59,35 @@ public class AdminController {
             System.out.println(e);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @DeleteMapping("/deleteChatMessage/{id}")
+    public ResponseEntity deleteChatMessage(@PathVariable("id") long id) {
+        chatMessageRepository.deleteById(id);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/deleteChatRoom/{id}")
+    public ResponseEntity deleteChatRoom(@PathVariable("id") long id) {
+        chatRoomRepository.deleteById(id);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @PutMapping("/updateChatRoom/{id}")
+    public ResponseEntity updateChatRoom(@PathVariable("id") long id, @RequestBody ChatRoom chatRoom) {
+        Optional<ChatRoom> chatRoomToUpdate = chatRoomRepository.findById(id);
+        if(chatRoomToUpdate.isPresent()) {
+            ChatRoom newChatRoom = chatRoomToUpdate.get();
+            newChatRoom.setName(chatRoom.getName());
+            return new ResponseEntity<>(chatRoomRepository.save(newChatRoom), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/createChatRoom")
+    public ResponseEntity createChatRoom(@RequestBody ChatRoom chatRoom) {
+        return new ResponseEntity<>(chatRoomRepository.save(chatRoom), HttpStatus.OK);
     }
 
 }

@@ -34,35 +34,57 @@ public class DummyDataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-            Role role = new Role();
-            role.setName("Administrator");
-            roleRepository.save(role);
+        userRepository.deleteAll();
+        flowFireRepository.deleteAll();
+        roleRepository.deleteAll();
+        chatRoomRepository.deleteAll();
 
-            {
-                User user = new User();
-                user.setUsername("Rasmus");
-                user.setRole(role);
+        Role role = new Role();
+        role.setName("Administrator");
+        roleRepository.save(role);
 
-                FlowFire fireFlow = new FlowFire();
-                fireFlow.setPassword("$2a$10$Wpn3AIuaRU4/975BYY8pLepwwV9phOah65k6uh3Kk2rAJn3ghq4Li");
-                fireFlow.setUsername("Rasmus");
-                fireFlow.setUser(user);
-                flowFireRepository.save(fireFlow);
-            }
+        {
+            User user = new User();
+            user.setUsername("Rasmus");
+            user.setRole(role);
 
-            {
-                User user = new User();
-                user.setUsername("Peter");
-                user.setRole(role);
+            FlowFire fireFlow = new FlowFire();
+            fireFlow.setPassword("$2a$10$Wpn3AIuaRU4/975BYY8pLepwwV9phOah65k6uh3Kk2rAJn3ghq4Li");
+            fireFlow.setUsername("Rasmus");
+            fireFlow.setUser(user);
+            flowFireRepository.save(fireFlow);
+        }
 
-                FlowFire fireFlow = new FlowFire();
-                fireFlow.setPassword("$2a$10$Wpn3AIuaRU4/975BYY8pLepAJn3ghq4Li");
-                fireFlow.setUsername("Peter");
-                fireFlow.setUser(user);
-                flowFireRepository.save(fireFlow);
-            }
+        {
+            User user = new User();
+            user.setUsername("Peter");
+            user.setRole(role);
 
-            ChatRoom room = new ChatRoom("public", false);
+            FlowFire fireFlow = new FlowFire();
+            fireFlow.setPassword("$2a$10$Wpn3AIuaRU4/975BYY8pLepwwV9phOah65k6uh3Kk2rAJn3ghq4Li");
+            fireFlow.setUsername("Peter");
+            fireFlow.setUser(user);
+            flowFireRepository.save(fireFlow);
+        }
+
+        {
+            ChatRoom room = new ChatRoom("general", false);
             chatRoomRepository.save(room);
+        }
+
+        {
+            ChatRoom room = new ChatRoom("synthetik", false);
+            chatRoomRepository.save(room);
+        }
+
+        {
+            ChatRoom room = new ChatRoom("offtopic", false);
+            chatRoomRepository.save(room);
+        }
+
+        {
+            ChatRoom room = new ChatRoom("boomer", false);
+            chatRoomRepository.save(room);
+        }
     }
 }

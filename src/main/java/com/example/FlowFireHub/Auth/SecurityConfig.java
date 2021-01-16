@@ -38,4 +38,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(jwtAuthenticationFilter(),
                         UsernamePasswordAuthenticationFilter.class);
     }
+
+//    @Override
+//    public void configure(WebSecurity http) throws Exception {
+//        http
+//                .ignoring()
+//                .antMatchers("/h2-console/**");
+//    }
 }

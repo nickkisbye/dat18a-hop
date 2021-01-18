@@ -39,10 +39,10 @@ public class UserController implements Serializable {
         }
     }
 
-//    @GetMapping("/test")
-//    public Iterable<User> test() {
-//        Iterable<User> users = userRepository.findAll();
-//        return users;
-//    }
+    @GetMapping("/test")
+    public Iterable<User> test() {
+        Iterable<User> users = userRepository.findAll();
+        return users;
+    }
 
 }
